@@ -4,15 +4,27 @@ node_js:
 jobs:
   include:
   - name: github pages
-  script: npm run build:website
-  deploy: 
-  provider: pages
-  local_dir: "./website/src"
-  skip_cleanup: true
-  github_token: $GITHUB_TOKEN
-  keep_history: true
-  on:
-    branch: master
+    script: npm run build:website
+    deploy:
+      provider: pages
+      local_dir: "./website/src"
+      skip_cleanup: true
+      github_token: "$GITHUB_TOKEN"
+      keep_history: true
+      on:
+        branch: master
+  - name: publish package
+    script: npm run build
+    deploy:
+      provider: npm
+      email: zhangchizi123@foxmail.com
+      skip_cleanup: true
+      api_key:
+        secure: iHBV4xOewAWQ2QKGBHkL6oiPhWmxEsQ1FQE98jcyxFvj71xOGNLYFYLjSk0FmsoQAJNQ88uocbhcBHMowQBIqBZ8GVedeRf8NKf2faKW6947TyDNQDnhI9VSXdB+Mq24bJNAUGK24I+EZ9+Eez7b+RAuq07cy/Asxx82B2LuZlEXplyp1aD4Uz8zi/LCkut5Q0xX1gIGPK4vKJWmyzgxPbSjHKoour+YqDClrQAKkUfgnayyjhmn9buMalFzGmqRBaINBQV1cI078yA6ttCEYbwbYoXlEmdCWWKGuhpqDxX+k3seh9xlxpoVPnyfPCZw+QgGH7XuYu+Amw7s3YE3OlZwhBIB79T5tKY5miexNMSRC+XyRWxG6+UM70rIoQCGnWKDAhObn6vDuY0lKlgnj4yMJFCJQwWC0SfD3ZlEWQMPFQJhgbwoA8+F/YrQJVeLCR5w08YD+HoOPVou1MKtL/Lbgto8j7rBL4KhIluBg5x/9qoamBIqtDPymKcNywBngENcRsEuKPzU7sZR8gXXKgK0sh6bS4Nn9OpBDJLyc8NKLRJ/56DhMDT0aWwHBvNRUg1S7VlIY4klqdRR08wJzWc1HoyKcLrprXeIBDdtBF0mCHoNUhUuztTyYlC5IFIDDwr6ETCyh+lSJHZoA6dvq/CjVZM+uP5NDKaZAEOFrGY=
+      on:
+        tags: true
+        branch: master
+        repo: zhangchizi/vue-nice-dates
 env:
   global:
     secure: hWni+6Ipu5L44POyegS8WbfUdgo8eL/nfvEryDhj2OgKGiFQ+6zS3lXOcj9rAv7hGHp4h2mF3pk3W0caIEktisPHYOzsMMuoJDug+CutGeygw/eJQ6a4ZwBPzd1am5H98DPkSbj00sEVpjJa6oO1ErcRor3Mr6rCVGOdePxJq/nHrxdN45f09StzjLAfK5oJTnnN+xf3Ab5WYrUAUY9XjCLyZ2U9m1ipH5SD2llR2tmI+HClvIYYpa9vCqjIYR+5IDdi+miyINq/Luo5JbLsNQFqeV8m3Ipvu+9QhCBDdXhquszyhFzXgxMNvjkER/kiqrKiZOuawH38NI4IZHwbw89FTN1i9x3bQWf+kFLm++q6HUF2qslu/6CM0VSxrJRWx2Wt/wexPpruSMPLsn9R0XyzUEyiCdiVXUo5ZWibhzWgKOswDt3VH7foCAYiGt2DwkX8h3G/+x6bYdcf5Be6mrEdo19bBXivw8GwKrpul+ZEcC9iGtNv5iujn6nBsVsi20BZbw58Vx34mKvfwo2rQmQAfS7Il7Iew99O8Kxt78cDDBN0B5vVhKyC8hkRQ3tl7c3Ju6e6mf4uzW52CkpoS9g4fwDlLHiawrYVslygyG8EmaE9yYa8vKl9v15MTh4stzGEmfWCsEwjr3tFyCrs/0ceK4shfcXnK0m5ksZ68vo=
