@@ -1,0 +1,105 @@
+{
+  "name": "vue-nice-dates",
+  "version": "1.0.0",
+  "keywords": [
+    "vue",
+    "datepicker",
+    "date-picker",
+    "calendar"
+  ],
+  "main": "build/index.js",
+  "module": "build/index.esm.js",
+  "unpkg": "build/index.umd.js",
+  "author": "zhangchizi",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhangchizi/vue-nice-dates.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zhangchizi/vue-nice-dates/issues"
+  },
+  "homepage": "https://github.com/zhangchizi/vue-nice-dates#readme",
+  "files": [
+    "dist",
+    "src/style.scss"
+  ],
+  "scripts": {
+    "start": "cross-env NODE_ENV=development rollup -c rollup-server.js --watch",
+    "build": "rollup -c && sass src/style.scss dist/style.css --no-source-map && postcss dist/style.css --no-map --use autoprefixer -o dist/style.css",
+    "build:website": "cross-env NODE_ENV=production rollup -c rollup-server.js",
+    "lint": "eslint --ext .js,.vue --cache --format codeframe --ignore-path .gitignore examples/ src/ test/ website/",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint && git add -A && npm test"
+    }
+  },
+  "peerDependencies": {
+    "date-fns": "^2.0.0",
+    "vue": "^2.3.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.6",
+    "@babel/preset-env": "^7.8.6",
+    "@rollup/plugin-commonjs": "^11.0.1",
+    "@rollup/plugin-node-resolve": "^7.0.0",
+    "@rollup/plugin-replace": "^2.3.1",
+    "@vue/test-utils": "^1.0.0-beta.31",
+    "autoprefixer": "^9.7.3",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "^25.1.0",
+    "cross-env": "^7.0.2",
+    "date-fns": "^2.9.0",
+    "eslint": "^6.8.0",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-jest": "^23.8.0",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "eslint-plugin-vue": "^6.1.2",
+    "flush-promises": "^1.0.2",
+    "husky": "^4.2.3",
+    "jest": "^24.9.0",
+    "postcss-cli": "^7.1.0",
+    "rollup": "^1.29.0",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-eslint": "^7.0.0",
+    "rollup-plugin-livereload": "^1.0.4",
+    "rollup-plugin-postcss": "^2.3.0",
+    "rollup-plugin-sass": "^1.2.2",
+    "rollup-plugin-serve": "^1.0.1",
+    "rollup-plugin-terser": "^5.3.0",
+    "rollup-plugin-vue": "^5.1.6",
+    "sass": "^1.26.2",
+    "vue": "^2.6.11",
+    "vue-code-highlight": "^0.7.4",
+    "vue-eslint-parser": "^7.0.0",
+    "vue-jest": "^3.0.5",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "vue"
+    ],
+    "transform": {
+      ".*\\.(vue)$": "vue-jest",
+      "^.+\\.js$": "<rootDir>/node_modules/babel-jest"
+    },
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "<rootDir>/src/*.{js,vue}",
+      "!**/node_modules/**"
+    ],
+    "coverageReporters": [
+      "html",
+      "text-summary"
+    ],
+    "coverageDirectory": "<rootDir>/test/coverage"
+  }
+}

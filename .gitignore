@@ -1,0 +1,17 @@
+.DS_Store
+.idea
+.vscode
+
+.coveralls.yml
+.eslintcache
+npm-debug.log
+yarn-debug.log*
+yarn-error.log*
+
+node_modules/
+dist/
+test/coverage/
+
+website/src/main.js
+website/src/main.js.map
+
