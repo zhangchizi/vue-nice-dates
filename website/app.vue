@@ -138,7 +138,8 @@
         minimumDate: Date, // Days before minimumDate will be disabled
         maximumDate: Date, // Days after maximumDate will be disabled
         modifiers: Object, // Only contains functions
-        modifiersClassNames: Object // See Customizing days above
+        modifiersClassNames: Object, // See Customizing days above
+        validator: Function // Custom date validation function. Recieves a date and must return a boolean.
 
         /* events */
         clickDate, // Triggered when click a day; argument: the date
@@ -160,6 +161,7 @@
         maximumDate: Date,
         modifiers: Object,
         modifiersClassNames: Object
+        validator: Function
 
         /* events */
         clickDate,
@@ -179,6 +181,7 @@
         maximumDate: Date,
         modifiers: Object,
         modifiersClassNames: Object
+        validator: Function
 
         /* events */
         clickDate,
@@ -200,6 +203,7 @@
         maximumDate: Date,
         modifiers: Object,
         modifiersClassNames: Object
+        validator: Function
 
         /* events */
         clickDate,
