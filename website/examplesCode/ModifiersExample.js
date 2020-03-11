@@ -12,8 +12,9 @@ const code = `
 
 <script>
 import { enGB } from 'date-fns/locale'
-import { DatePickerCalendar } from 'vue-nice-dates'
 import { getDay } from 'date-fns'
+import { DatePickerCalendar } from 'vue-nice-dates'
+import 'vue-nice-dates/dist/style.css'
 
 const modifiers = {
   disabled: date => getDay(date) === 6, // Disables Saturdays

@@ -227,7 +227,7 @@
       </VueCodeHighlight>
       <footer>
         <div class="text-light">
-          Made by <a href="javascript:;">Zhangchizi</a>
+          Made by <a href="https://github.com/zhangchizi/vue-nice-dates">Zhangchizi</a>
         </div>
         <div class="text-light">
           Based on <a href="https://reactnicedates.hernansartorio.com/">react-nice-dates</a>

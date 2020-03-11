@@ -11,6 +11,7 @@ const code = `
 <script>
 import { enGB } from 'date-fns/locale'
 import { Calendar } from 'vue-nice-dates'
+import 'vue-nice-dates/dist/style.css'
 
 export default {
   name: 'CalendarExample',

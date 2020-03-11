@@ -31,6 +31,7 @@ const code = `
 <script>
 import { enUS, es } from 'date-fns/locale'
 import { DatePicker } from 'vue-nice-dates'
+import 'vue-nice-dates/dist/style.css'
 
 export default {
   name: 'LocalesExample',

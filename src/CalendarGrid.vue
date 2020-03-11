@@ -1,7 +1,7 @@
 <template>
   <div
     class="nice-dates-grid"
-    :style="{ height: cellHeight * 6 }"
+    :style="styleObjectGrid"
   >
     <div
       ref="containerElementRef"
@@ -104,6 +104,9 @@ export default {
         transform: `translate3d(0, ${this.offset}px, 0)`,
         transitionDuration: `${this.transitionDuration}ms`
       }
+    },
+    styleObjectGrid () {
+      return { height: this.cellHeight * 6 + 'px' }
     }
   },
   watch: {
