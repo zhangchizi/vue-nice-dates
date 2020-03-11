@@ -1,0 +1,18 @@
+language: node_js
+node_js:
+- 12
+jobs:
+  include:
+  - name: github pages
+  script: npm run build:website
+  deploy: 
+  provider: pages
+  local_dir: "./website/src"
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  keep_history: true
+  on:
+    branch: master
+env:
+  global:
+    secure: hWni+6Ipu5L44POyegS8WbfUdgo8eL/nfvEryDhj2OgKGiFQ+6zS3lXOcj9rAv7hGHp4h2mF3pk3W0caIEktisPHYOzsMMuoJDug+CutGeygw/eJQ6a4ZwBPzd1am5H98DPkSbj00sEVpjJa6oO1ErcRor3Mr6rCVGOdePxJq/nHrxdN45f09StzjLAfK5oJTnnN+xf3Ab5WYrUAUY9XjCLyZ2U9m1ipH5SD2llR2tmI+HClvIYYpa9vCqjIYR+5IDdi+miyINq/Luo5JbLsNQFqeV8m3Ipvu+9QhCBDdXhquszyhFzXgxMNvjkER/kiqrKiZOuawH38NI4IZHwbw89FTN1i9x3bQWf+kFLm++q6HUF2qslu/6CM0VSxrJRWx2Wt/wexPpruSMPLsn9R0XyzUEyiCdiVXUo5ZWibhzWgKOswDt3VH7foCAYiGt2DwkX8h3G/+x6bYdcf5Be6mrEdo19bBXivw8GwKrpul+ZEcC9iGtNv5iujn6nBsVsi20BZbw58Vx34mKvfwo2rQmQAfS7Il7Iew99O8Kxt78cDDBN0B5vVhKyC8hkRQ3tl7c3Ju6e6mf4uzW52CkpoS9g4fwDlLHiawrYVslygyG8EmaE9yYa8vKl9v15MTh4stzGEmfWCsEwjr3tFyCrs/0ceK4shfcXnK0m5ksZ68vo=
