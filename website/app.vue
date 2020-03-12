@@ -133,7 +133,7 @@
         /* props */
         date: String, // Require .sync modifier
         month: Date, // The month that the calendar shows
-        locale: Object, // required
+        locale: Object, // required; date-fns locale object
         format: String, // Default: 'dd/MM/yyyy'
         minimumDate: Date, // Days before minimumDate will be disabled
         maximumDate: Date, // Days after maximumDate will be disabled
@@ -142,7 +142,6 @@
         validator: Function // Custom date validation function. Recieves a date and must return a boolean.
 
         /* events */
-        clickDate, // Triggered when click a day; argument: the date
         mouseEnterDate, // Triggered when mouse enters a day; argument: the date
         mouseLeaveDates, // Triggered when mouse leaves the grid of days
         monthChange // Triggered when change the month; argument: the month
@@ -164,7 +163,6 @@
         validator: Function
 
         /* events */
-        clickDate,
         mouseEnterDate,
         mouseLeaveDates,
         monthChange
@@ -184,7 +182,7 @@
         validator: Function
 
         /* events */
-        clickDate,
+        clickDate, // Triggered when click a day; argument: the date
         mouseEnterDate,
         mouseLeaveDates,
         monthChange
