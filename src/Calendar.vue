@@ -49,9 +49,7 @@ export default {
     },
     month: {
       type: Date,
-      default () {
-        return new Date()
-      }
+      default: undefined
     },
     modifiers: {
       type: Object,
@@ -76,7 +74,7 @@ export default {
   },
   data () {
     return {
-      receivedMonth: this.date || this.month,
+      receivedMonth: this.date || this.month || this.minimumDate || new Date(),
       $isChangedFromInput: true
     }
   },
@@ -93,7 +91,7 @@ export default {
     date (newValue) {
       if (this.$data.$isChangedFromInput) {
         if (!newValue) {
-          this.receivedMonth = this.month
+          this.receivedMonth = this.month || this.minimumDate || new Date()
           return
         }
         this.receivedMonth = newValue

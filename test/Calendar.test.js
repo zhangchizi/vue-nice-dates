@@ -1,5 +1,4 @@
 import { shallowMount } from '@vue/test-utils'
-import { subDays } from 'date-fns'
 import { enGB } from 'date-fns/locale'
 import flushPromises from 'flush-promises'
 import Calendar from '../src/Calendar'
@@ -16,9 +15,13 @@ describe('Calendar.vue', () => {
     })
   })
 
+  it('the receivedMonth has default value when created', async () => {
+    expect(wrapper.vm.receivedMonth).toBeInstanceOf(Date)
+  })
+
   describe('when the date prop changed', () => {
     it('should update the receivedMonth if the change is from the input', async () => {
-      const newDate = subDays(new Date(), 1)
+      const newDate = new Date()
       wrapper.setProps({
         date: newDate
       })
@@ -29,13 +32,13 @@ describe('Calendar.vue', () => {
         date: ''
       })
       await flushPromises()
-      expect(wrapper.vm.receivedMonth).toEqual(wrapper.vm.month)
+      expect(wrapper.vm.receivedMonth).toBeInstanceOf(Date)
     })
 
     it('should not update the receivedMonth if the change is from clicking a day in the calendar', async () => {
       const CalendarGridWrapper = wrapper.find(CalendarGrid)
       CalendarGridWrapper.vm.$emit('clickDate')
-      const newDate = subDays(new Date(), 1)
+      const newDate = new Date()
       wrapper.setProps({
         date: newDate
       })
