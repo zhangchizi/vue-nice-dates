@@ -137,7 +137,7 @@
         format: String, // Default: 'dd/MM/yyyy'
         minimumDate: Date, // Days before minimumDate will be disabled
         maximumDate: Date, // Days after maximumDate will be disabled
-        modifiers: Object, // Only contains functions
+        modifiers: Object, // Only contains functions that receive a date and return a boolean
         modifiersClassNames: Object, // See Customizing days above
         validator: Function // Custom date validation function. Recieves a date and must return a boolean.
 
@@ -152,7 +152,7 @@
         /* props */
         startDate: String, // Require .sync modifier
         endDate: String, // Require .sync modifier
-        focusName: String, // Require .sync modifier; Default: START_DATE; Can be START_DATE or END_DATE; Indicates which date will be choose
+        focusName: String, // Require .sync modifier; Default: START_DATE; Can be START_DATE or END_DATE; Indicates which date will be chosen
         month: Date,
         locale: Object, // required
         format: String, // Default: 'dd/MM/yyyy'
@@ -183,6 +183,7 @@
 
         /* events */
         clickDate, // Triggered when click a day; argument: the date
+        changeLastValidDate, // Triggered if the date is valid
         mouseEnterDate,
         mouseLeaveDates,
         monthChange
@@ -193,7 +194,7 @@
         /* props */
         startDate: String, // Require .sync modifier
         endDate: String, // Require .sync modifier
-        focusName: String, // Default: START_DATE; Can be START_DATE or END_DATE; Indicates which date will be choose
+        focusName: String, // Default: START_DATE; Can be START_DATE or END_DATE; Indicates which date will be chosen
         month: Date,
         locale: Object, // required
         format: String, // Default: 'dd/MM/yyyy'
@@ -205,6 +206,8 @@
 
         /* events */
         clickDate,
+        changeLastValidStartDate, // Triggered if the start date is valid
+        changeLastValidEndDate, // Triggered if the end date is valid
         mouseEnterDate,
         mouseLeaveDates,
         monthChange
