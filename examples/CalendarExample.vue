@@ -9,6 +9,7 @@
 </template>
 <script>
 import { enGB } from 'date-fns/locale'
+import { isSameDay } from 'date-fns'
 import { Calendar } from '../src'
 
 export default {
@@ -26,7 +27,7 @@ export default {
     modifiers () {
       return {
         selected: (date) => {
-          return this.dates.indexOf(date) > -1
+          return this.dates.some(item => isSameDay(item, date))
         }
       }
     }
