@@ -13,6 +13,7 @@ jobs:
       keep_history: true
       on:
         branch: master
+    after_script: "cat ./test/coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   - name: publish package
     script: npm run build
     deploy:
