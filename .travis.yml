@@ -4,7 +4,7 @@ node_js:
 jobs:
   include:
   - name: github pages
-    script: npm run build:website
+    script: npm test && npm run build:website
     deploy:
       provider: pages
       local_dir: "./website/src"
