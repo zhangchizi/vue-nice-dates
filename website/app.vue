@@ -15,7 +15,7 @@
         Overview
       </h2>
       <p>Vue Nice Dates is composed of a set of components and utilities with different levels of abstraction that you can use to build your own date pickers.</p>
-      <p>At the top level, you have <code>DatePicker</code> and <code>DateRangePicker</code>. These are slightly-opinionated components that should cover the most common use-cases. They allow displaying date inputs with a calendar popover below. They make no assumptions about how your inputs should look. Instead, they provide all the necessary props so you can render them yourself.</p>
+      <p>At the top level, you have <code>DatePicker</code> and <code>DateRangePicker</code>. These are slightly-opinionated components that should cover the most common use-cases. They allow displaying date inputs with a calendar popover below. They make no assumptions about how your inputs should look, so you can render them yourself.</p>
       <p>Here's the most basic example using the <code>DatePicker</code> component:</p>
       <!-- DatePicker example -->
       <div class="example">
