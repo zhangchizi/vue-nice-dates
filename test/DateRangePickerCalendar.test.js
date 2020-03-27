@@ -19,7 +19,65 @@ describe('DateRangePickerCalendar.vue', () => {
     expect(wrapper.vm.focusName).toBe(START_DATE)
   })
 
-  describe('when a day in the the calendar was clicked', () => {
+  describe('when created', () => {
+    it('should clear the startDate if it is invalid', async () => {
+      const wrapper = shallowMount(DateRangePickerCalendar, {
+        propsData: {
+          locale: enGB,
+          startDate: '2020-2-2'
+        }
+      })
+      await flushPromises()
+      expect(wrapper.emitted()['update:startDate'][0]).toEqual([''])
+    })
+
+    it('should clear the endDate if it is invalid', async () => {
+      const wrapper = shallowMount(DateRangePickerCalendar, {
+        propsData: {
+          locale: enGB,
+          endDate: '2020-2-2'
+        }
+      })
+      await flushPromises()
+      expect(wrapper.emitted()['update:endDate'][0]).toEqual([''])
+    })
+
+    it('should save the parsed startDate if it is valid', async () => {
+      const wrapper = shallowMount(DateRangePickerCalendar, {
+        propsData: {
+          locale: enGB,
+          startDate: '02/02/2020'
+        }
+      })
+      await flushPromises()
+      expect(wrapper.vm.receivedStartDate).toEqual(new Date(2020, 1, 2))
+    })
+
+    it('should save the parsed endDate if it is valid', async () => {
+      const wrapper = shallowMount(DateRangePickerCalendar, {
+        propsData: {
+          locale: enGB,
+          endDate: '02/02/2020'
+        }
+      })
+      await flushPromises()
+      expect(wrapper.vm.receivedEndDate).toEqual(new Date(2020, 1, 2))
+    })
+
+    it('should clear the endDate if the endDate is not after the startDate', async () => {
+      const wrapper = shallowMount(DateRangePickerCalendar, {
+        propsData: {
+          locale: enGB,
+          startDate: '02/02/2020',
+          endDate: '02/02/2020'
+        }
+      })
+      await flushPromises()
+      expect(wrapper.emitted()['update:endDate'][0]).toEqual([''])
+    })
+  })
+
+  describe('when a day in the calendar was clicked', () => {
     it('should clear the endDate if the startDate is after it', async () => {
       wrapper.setProps({
         endDate: '02/02/2020'

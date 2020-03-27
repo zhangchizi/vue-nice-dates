@@ -19,6 +19,30 @@ describe('DatePickerCalendar.vue', () => {
     expect(wrapper.vm.format).toBe('dd/MM/yyyy')
   })
 
+  describe('when created', () => {
+    it('should clear the date if it is invalid', async () => {
+      const wrapper = shallowMount(DatePickerCalendar, {
+        propsData: {
+          locale: enGB,
+          date: '2020-2-2'
+        }
+      })
+      await flushPromises()
+      expect(wrapper.emitted()['update:date'][0]).toEqual([''])
+    })
+
+    it('should save the parsed date if it is valid', async () => {
+      const wrapper = shallowMount(DatePickerCalendar, {
+        propsData: {
+          locale: enGB,
+          date: '02/02/2020'
+        }
+      })
+      await flushPromises()
+      expect(wrapper.vm.receivedDate).toEqual(new Date(2020, 1, 2))
+    })
+  })
+
   describe('when the date prop changed', () => {
     it('should validate the date if the date exists', async () => {
       const spyFn = jest.spyOn(wrapper.vm, 'isValidAndSelectable')

@@ -70,7 +70,7 @@ export default {
   },
   data () {
     return {
-      receivedDate: this.date
+      receivedDate: null
     }
   },
   watch: {
@@ -89,7 +89,23 @@ export default {
       }
     }
   },
+  created () {
+    this.initDate()
+  },
   methods: {
+    initDate () {
+      if (!this.date) {
+        return
+      }
+      const parsedDate = parse(this.date, this.format, new Date())
+      const isValid = this.isValidAndSelectable(parsedDate)
+      if (isValid) {
+        this.receivedDate = parsedDate
+        this.changeLastValidDate(this.date)
+      } else {
+        this.$emit('update:date', '')
+      }
+    },
     isSelected (date) {
       if (!this.receivedDate) return false
       const options = { minimumDate: this.minimumDate, maximumDate: this.maximumDate }
@@ -110,8 +126,10 @@ export default {
       triggerBlurForTouchDevice()
     },
     changeLastValidDate (date) {
-      const dateString = date && format(date, this.format, { locale: this.locale })
-      this.$emit('changeLastValidDate', dateString)
+      if (date instanceof Date) {
+        date = format(date, this.format, { locale: this.locale })
+      }
+      this.$emit('changeLastValidDate', date)
     },
     handleMouseEnterDate (date) {
       this.$emit('mouseEnterDate', date)

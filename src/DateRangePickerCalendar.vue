@@ -79,8 +79,8 @@ export default {
   },
   data () {
     return {
-      receivedStartDate: this.startDate,
-      receivedEndDate: this.endDate,
+      receivedStartDate: null,
+      receivedEndDate: null,
       hoveredDate: null
     }
   },
@@ -120,7 +120,7 @@ export default {
       if (newValue === '') {
         this.receivedStartDate = newValue
         this.$emit('update:startDate', newValue)
-        this.$emit('changeLastValidStartDate', newValue)
+        this.changeLastValidDate('StartDate', newValue)
         return
       }
       const parsedDate = parse(newValue, this.format, new Date())
@@ -129,18 +129,17 @@ export default {
         if (this.receivedStartDate && isEqual(parsedDate, this.receivedStartDate)) return
         if (this.receivedEndDate && isAfter(parsedDate, this.receivedEndDate)) {
           this.$emit('update:endDate', '')
-          this.$emit('changeLastValidEndDate', '')
+          this.changeLastValidDate('EndDate', '')
         }
         this.receivedStartDate = parsedDate
-        const dateString = format(parsedDate, this.format, { locale: this.locale })
-        this.$emit('changeLastValidStartDate', dateString)
+        this.changeLastValidDate('StartDate', parsedDate)
       }
     },
     endDate (newValue) {
       if (newValue === '') {
         this.receivedEndDate = newValue
         this.$emit('update:endDate', newValue)
-        this.$emit('changeLastValidEndDate', newValue)
+        this.changeLastValidDate('EndDate', newValue)
         return
       }
       const parsedDate = parse(newValue, this.format, new Date())
@@ -149,15 +148,50 @@ export default {
         if (this.receivedEndDate && isEqual(parsedDate, this.receivedEndDate)) return
         if (this.receivedStartDate && isBefore(parsedDate, this.receivedStartDate)) {
           this.$emit('update:startDate', '')
-          this.$emit('changeLastValidStartDate', '')
+          this.changeLastValidDate('StartDate', '')
         }
         this.receivedEndDate = parsedDate
-        const dateString = format(parsedDate, this.format, { locale: this.locale })
-        this.$emit('changeLastValidEndDate', dateString)
+        this.changeLastValidDate('EndDate', parsedDate)
       }
     }
   },
+  created () {
+    this.initStartDate()
+    this.initEndDate()
+    this.processInitalDate()
+  },
   methods: {
+    initStartDate () {
+      if (this.startDate) {
+        const parsedDate = parse(this.startDate, this.format, new Date())
+        const isValid = this.isValidAndSelectable(parsedDate)
+        if (isValid) {
+          this.receivedStartDate = parsedDate
+          this.changeLastValidDate('StartDate', this.startDate)
+        } else {
+          this.$emit('update:startDate', '')
+        }
+      }
+    },
+    initEndDate () {
+      if (this.endDate) {
+        const parsedDate = parse(this.endDate, this.format, new Date())
+        const isValid = this.isValidAndSelectable(parsedDate)
+        if (isValid) {
+          this.receivedEndDate = parsedDate
+          this.changeLastValidDate('EndDate', this.endDate)
+        } else {
+          this.$emit('update:endDate', '')
+        }
+      }
+    },
+    processInitalDate () {
+      if (this.receivedEndDate && this.receivedStartDate) {
+        if (!isAfter(this.receivedEndDate, this.receivedStartDate)) {
+          this.$emit('update:endDate', '')
+        }
+      }
+    },
     handleClickDate (date) {
       this.$emit('clickDate', date)
       if (this.focusName === START_DATE) {
@@ -188,6 +222,12 @@ export default {
     },
     handleMonthChange (month) {
       this.$emit('monthChange', month)
+    },
+    changeLastValidDate (name, date) {
+      if (date instanceof Date) {
+        date = format(date, this.format, { locale: this.locale })
+      }
+      this.$emit(`changeLastValid${name}`, date)
     },
     isStartDate (date) {
       if (!this.displayedStartDate || !this.displayedEndDate) return false
