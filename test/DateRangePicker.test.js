@@ -1,7 +1,7 @@
 import { shallowMount } from '@vue/test-utils'
 import { enGB } from 'date-fns/locale'
 import flushPromises from 'flush-promises'
-import { START_DATE, END_DATE } from '../src/constants'
+import { START_DATE } from '../src/constants'
 import DateRangePicker from '../src/DateRangePicker'
 import DateRangePickerCalendar from '../src/DateRangePickerCalendar'
 
@@ -87,52 +87,15 @@ describe('DateRangePicker.vue', () => {
       expect(wrapper.vm.receivedIsFocus).toBe(true)
     })
 
-    it('should close popover if the startDate and the endDate both exist', async () => {
-      const calendarWrapper = wrapper.find(DateRangePickerCalendar)
+    it('should close popover if the startDate and the endDate both exist ', async () => {
       wrapper.setProps({
         isFocus: true
       })
-      calendarWrapper.vm.$emit('clickDate', new Date(2020, 1, 2))
-      await flushPromises()
-      expect(wrapper.emitted()['update:startDate'][0]).toEqual(['02/02/2020'])
-      expect(wrapper.vm.receivedIsFocus).toBe(true)
-
-      calendarWrapper.vm.$emit('clickDate', new Date(2020, 2, 2))
-      await flushPromises()
-      expect(wrapper.emitted()['update:endDate'][0]).toEqual(['02/03/2020'])
-      expect(wrapper.vm.receivedIsFocus).toBe(false)
-    })
-
-    it('should close popover if the startDate has an initial value when clicked ', async () => {
-      const wrapper = shallowMount(DateRangePicker, {
-        propsData: {
-          startDate: '02/02/2020',
-          isFocus: true,
-          focusName: END_DATE,
-          locale: enGB
-        }
-      })
-      await flushPromises()
       const calendarWrapper = wrapper.find(DateRangePickerCalendar)
-      calendarWrapper.vm.$emit('clickDate', new Date(2020, 1, 2))
+      calendarWrapper.vm.$emit('clickDate', new Date())
       await flushPromises()
-      expect(wrapper.emitted()['update:endDate'][0]).toEqual(['02/02/2020'])
-      expect(wrapper.vm.receivedIsFocus).toBe(false)
-    })
-
-    it('should close popover if the endDate has an initial value when clicked ', async () => {
-      const wrapper = shallowMount(DateRangePicker, {
-        propsData: {
-          endDate: '02/02/2020',
-          isFocus: true,
-          locale: enGB
-        }
-      })
+      calendarWrapper.vm.$emit('clickDate', new Date())
       await flushPromises()
-      const calendarWrapper = wrapper.find(DateRangePickerCalendar)
-      calendarWrapper.vm.$emit('clickDate', new Date(2020, 1, 2))
-      await flushPromises()
-      expect(wrapper.emitted()['update:startDate'][0]).toEqual(['02/02/2020'])
       expect(wrapper.vm.receivedIsFocus).toBe(false)
     })
 
@@ -233,14 +196,14 @@ describe('DateRangePicker.vue', () => {
   it('should emit events', async () => {
     const calendarWrapper = wrapper.find(DateRangePickerCalendar)
     const date = new Date()
-    calendarWrapper.vm.$emit('clickDate', date)
-    calendarWrapper.vm.$emit('clickDate', date)
+    calendarWrapper.vm.$emit('update:startDate', date)
+    calendarWrapper.vm.$emit('update:endDate', date)
     calendarWrapper.vm.$emit('mouseEnterDate', date)
     calendarWrapper.vm.$emit('monthChange', date)
     calendarWrapper.vm.$emit('mouseLeaveDates')
     await flushPromises()
-    expect(wrapper.emitted()['update:startDate']).toBeTruthy()
-    expect(wrapper.emitted()['update:endDate']).toBeTruthy()
+    expect(wrapper.emitted()['update:startDate'][0]).toEqual([date])
+    expect(wrapper.emitted()['update:endDate'][0]).toEqual([date])
     expect(wrapper.emitted().mouseEnterDate[0]).toEqual([date])
     expect(wrapper.emitted().monthChange[0]).toEqual([date])
     expect(wrapper.emitted().mouseLeaveDates).toBeTruthy()

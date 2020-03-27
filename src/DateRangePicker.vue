@@ -29,7 +29,6 @@
   </div>
 </template>
 <script>
-import { format } from 'date-fns'
 import { END_DATE, START_DATE } from './constants'
 import { triggerBlurForTouchDevice } from '../src/utils'
 import DateRangePickerCalendar from './DateRangePickerCalendar'
@@ -150,16 +149,13 @@ export default {
     handleClickDate (date) {
       // Triggered after 'receivedStartDate' and 'receivedEndDate' updated.
       this.$nextTick(() => {
-        const dateString = format(date, this.format, { locale: this.locale })
         if (this.receivedFocusName === START_DATE) {
-          this.$emit('update:startDate', dateString)
           this.$data.$hasTouchedStartDate = true
           if (!this.receivedEndDate) {
             this.triggerFocusEvent(END_DATE)
             this.receivedFocusName = END_DATE
           }
         } else if (this.receivedFocusName === END_DATE) {
-          this.$emit('update:endDate', dateString)
           this.$data.$hasTouchedEndDate = true
           if (!this.receivedStartDate) {
             this.triggerFocusEvent(START_DATE)
@@ -192,16 +188,16 @@ export default {
         // update the receivedStartDate before handleClickDate()
         this.receivedStartDate = dataString
         this.$data.$hasTouchedStartDate = false
-        this.$emit('update:startDate', '')
       }
+      this.$emit('update:startDate', dataString)
     },
     updateReceivedEndDate (dataString) {
       if (!dataString) {
         // update the receivedStartDate before handleClickDate()
         this.receivedEndDate = dataString
         this.$data.$hasTouchedEndDate = false
-        this.$emit('update:endDate', '')
       }
+      this.$emit('update:endDate', dataString)
     },
     handleOutsideClick (e) {
       if (!this.receivedIsFocus) return
