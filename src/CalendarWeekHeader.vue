@@ -4,6 +4,7 @@
       v-for="day in weekDays()"
       :key="day"
       class="nice-dates-week-header_day"
+      :class="classObject"
     >
       {{ day }}
     </span>
@@ -11,6 +12,7 @@
 </template>
 <script>
 import { eachDayOfInterval, endOfWeek, startOfWeek, format } from 'date-fns'
+import { GRID_DAY } from './constants'
 
 export default {
   name: 'CalendarWeekHeader',
@@ -18,6 +20,17 @@ export default {
     locale: {
       required: true,
       type: Object
+    },
+    gridType: {
+      required: true,
+      type: String
+    }
+  },
+  computed: {
+    classObject () {
+      return {
+        '-outside': this.gridType !== GRID_DAY
+      }
     }
   },
   methods: {

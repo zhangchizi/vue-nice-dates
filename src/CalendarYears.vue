@@ -6,17 +6,17 @@
       :style="styleObject"
       @mouseleave.prevent="handleMouseLeaveDates"
     >
-      <CalendarMonth
-        v-for="item in months"
+      <CalendarYear
+        v-for="(item, index) in years"
         :key="lightFormat(item)"
         :locale="locale"
         :date="item"
         :is-wide="isWide"
         :style="styleForItem"
-        :modifiers="generateModifiers(item)"
+        :modifiers="generateModifiers(item, index)"
         :modifiers-class-names="modifiersClassNames"
         @click.native.prevent="handleClickDate(item)"
-        @mouseenter.native.prevent="handleMouseEnterDate(item)"
+        @mouseenter.native.prevent="handleMouseEnterYear(item)"
         @touch.native.passive="handleClickDate(item)"
       />
     </div>
@@ -24,18 +24,18 @@
 </template>
 
 <script>
-import { endOfYear, startOfYear, eachMonthOfInterval, addMonths, subMonths, isSameYear, isSameMonth, startOfMonth, getYear, isAfter, lightFormat } from 'date-fns'
-import CalendarMonth from './CalendarMonth'
+import { startOfYear, eachYearOfInterval, addYears, getYear, isSameYear, isAfter, subYears, lightFormat } from 'date-fns'
+import CalendarYear from './CalendarYear'
 import { invokeModifiers } from './utils'
-import { ORIGIN_BOTTOM, ORIGIN_TOP, TRANSITION_DURATION, GRID_MONTH } from './constants'
+import { ORIGIN_BOTTOM, ORIGIN_TOP, TRANSITION_DURATION, GRID_YEAR } from './constants'
 
 const GRID_ROWS = 5
 const GRID_COLS = 4
 
 export default {
-  name: 'CalendarMonths',
+  name: 'CalendarYears',
   components: {
-    CalendarMonth
+    CalendarYear
   },
   props: {
     locale: {
@@ -54,8 +54,8 @@ export default {
       }
     },
     cellHeight: {
-      type: Number,
-      default: 0
+      required: true,
+      type: Number
     },
     isWide: {
       type: Boolean,
@@ -78,7 +78,7 @@ export default {
     return {
       startDate: null,
       endDate: null,
-      months: [],
+      years: [],
       offset: 0,
       origin: ORIGIN_TOP,
       transition: false,
@@ -107,70 +107,70 @@ export default {
   },
   watch: {
     initialDate (newValue, oldValue) {
-      if (isSameYear(newValue, oldValue)) return
       this.transitionToCurrentDate(newValue, oldValue)
     }
   },
   created () {
-    this.initMonths()
+    this.initYears()
   },
   beforeDestroy () {
     clearTimeout(this.$data.$timeoutId)
   },
   methods: {
-    initMonths (date = this.initialDate) {
-      this.startDate = subMonths(startOfYear(date), GRID_COLS)
-      this.endDate = addMonths(startOfMonth(endOfYear(date)), GRID_COLS)
+    initYears () {
+      this.startDate = startOfYear(this.initialDate)
+      this.endDate = addYears(this.startDate, GRID_COLS * GRID_ROWS - 1)
       this.offset = 0
       this.transition = false
-      this.generateMonths()
+      this.generateYears()
     },
-    generateMonths ({ startDate = this.startDate, endDate = this.endDate } = {}) {
-      this.months = eachMonthOfInterval({
+    generateYears ({ startDate = this.startDate, endDate = this.endDate } = {}) {
+      this.years = eachYearOfInterval({
         start: startDate,
         end: endDate
       })
     },
     handleClickDate (date) {
-      this.$emit('clickDate', date, GRID_MONTH)
+      this.$emit('clickDate', date, GRID_YEAR)
     },
-    handleMouseEnterDate (date) {
+    handleMouseEnterYear (date) {
       this.$emit('mouseEnterDate', date)
     },
     handleMouseLeaveDates () {
       this.$emit('mouseLeaveDates')
     },
-    generateModifiers (month) {
+    generateModifiers (year, index) {
       return {
-        selected: isSameMonth(month, this.date || null),
-        ...invokeModifiers(this.modifiers, month, GRID_MONTH),
-        outside: !isSameYear(month, this.initialDate),
+        selected: isSameYear(year, this.date || null),
+        outside: index > 10,
+        ...invokeModifiers(this.modifiers, year),
         wide: this.isWide
       }
     },
     transitionToCurrentDate (date, oldDate) {
       clearTimeout(this.$data.$timeoutId)
-      const diffs = Math.abs(getYear(date) - getYear(oldDate))
-      if (diffs < 3) {
+      const total = GRID_ROWS * GRID_COLS
+      const diffYears = Math.abs(getYear(date) - getYear(oldDate))
+      const diffs = Math.floor(diffYears / total)
+      if (diffs > 0 && diffs < 3) {
         this.transition = true
-        const offset = this.cellHeight * 6 / GRID_ROWS * 3
-        const count = GRID_COLS * (GRID_ROWS - 1)
+        const offset = this.cellHeight * 6 * diffs
         if (isAfter(date, oldDate)) {
           this.offset = -offset
-          const endDate = addMonths(this.endDate, count)
-          this.generateMonths({ endDate })
+          const endDate = addYears(this.endDate, total * diffs)
+          this.generateYears({ endDate })
           this.origin = ORIGIN_TOP
         } else {
           this.offset = offset
-          const startDate = subMonths(this.startDate, count)
-          this.generateMonths({ startDate })
+          const startDate = subYears(this.startDate, total * diffs)
+          this.generateYears({ startDate })
           this.origin = ORIGIN_BOTTOM
         }
         this.$data.$timeoutId = setTimeout(() => {
-          this.initMonths(date)
+          this.initYears(date)
         }, this.transitionDuration)
       } else {
-        this.initMonths(date)
+        this.initYears(date)
       }
     },
     lightFormat (date, format = 'yyyy-MM-dd') {

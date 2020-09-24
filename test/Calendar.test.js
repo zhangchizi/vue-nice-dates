@@ -10,51 +10,31 @@ describe('Calendar.vue', () => {
   beforeEach(() => {
     wrapper = shallowMount(Calendar, {
       propsData: {
-        locale: enGB
+        locale: enGB,
+        initialDate: new Date()
       }
     })
   })
 
-  it('the receivedMonth has default value when created', async () => {
-    expect(wrapper.vm.receivedMonth).toBeInstanceOf(Date)
+  it('the "receivedInitialDate" has default value when created', async () => {
+    expect(wrapper.vm.receivedInitialDate).toBeInstanceOf(Date)
   })
 
-  describe('when the date prop changed', () => {
-    it('should update the receivedMonth if the change is from the input', async () => {
+  describe('when the "date" prop changed', () => {
+    it('should update the "receivedInitialDate"', async () => {
       const newDate = new Date()
       wrapper.setProps({
         date: newDate
       })
       await flushPromises()
-      expect(wrapper.vm.receivedMonth).toEqual(newDate)
-
+      expect(wrapper.vm.receivedInitialDate).toEqual(newDate)
+    })
+    it('"receivedInitalDate" should be a date even the data is an empty string', async () => {
       wrapper.setProps({
         date: ''
       })
       await flushPromises()
-      expect(wrapper.vm.receivedMonth).toBeInstanceOf(Date)
-    })
-
-    it('should not update the receivedMonth if the change is from clicking a day in the calendar', async () => {
-      const CalendarGridWrapper = wrapper.find(CalendarGrid)
-      CalendarGridWrapper.vm.$emit('clickDate')
-      const newDate = new Date()
-      wrapper.setProps({
-        date: newDate
-      })
-      await flushPromises()
-      expect(wrapper.vm.receivedMonth).not.toEqual(newDate)
-    })
-  })
-
-  describe('when the month prop changed', () => {
-    it('should update the receivedMonth', async () => {
-      const month = new Date(2020, 1, 1)
-      wrapper.setProps({
-        month
-      })
-      await flushPromises()
-      expect(wrapper.vm.receivedMonth).toEqual(month)
+      expect(wrapper.vm.receivedInitialDate).toBeInstanceOf(Date)
     })
   })
 
@@ -63,20 +43,40 @@ describe('Calendar.vue', () => {
     expect(wrapper.vm.mergedModifiers.disabled(new Date())).toBe(false)
   })
 
+  it('"getGridType()" should work', () => {
+    const getGridType = wrapper.vm.getGridType
+    expect(getGridType('year')).toBe('month')
+    expect(getGridType('month')).toBe('day')
+    expect(getGridType('day', true)).toBe('month')
+    expect(getGridType('month', true)).toBe('year')
+    expect(getGridType('year', true)).toBe('year')
+  })
+
+  it('should call relative functions if the CalendarNavigation component emits events', async () => {
+    const spyFn1 = jest.spyOn(wrapper.vm, 'handleClickTitle')
+    const spyFn2 = jest.spyOn(wrapper.vm, 'handleNavigate')
+    wrapper.setMethods({
+      handleClickTitle: spyFn1,
+      handleNavigate: spyFn2
+    })
+    const CalendarNavigationWapper = wrapper.find(CalendarNavigation)
+    CalendarNavigationWapper.vm.$emit('clickTitle')
+    CalendarNavigationWapper.vm.$emit('navigate')
+    await flushPromises()
+    expect(spyFn1).toHaveBeenCalled()
+    expect(spyFn2).toHaveBeenCalled()
+  })
+
   it('should emit events', async () => {
     const CalendarGridWrapper = wrapper.find(CalendarGrid)
     const date = new Date()
-    CalendarGridWrapper.vm.$emit('clickDate', date)
+    const type = 'type'
+    CalendarGridWrapper.vm.$emit('clickDate', date, type)
     CalendarGridWrapper.vm.$emit('mouseEnterDate', date)
     CalendarGridWrapper.vm.$emit('mouseLeaveDates')
     await flushPromises()
-    expect(wrapper.emitted().clickDate[0]).toEqual([date])
+    expect(wrapper.emitted().clickDate[0]).toEqual([date, type])
     expect(wrapper.emitted().mouseEnterDate[0]).toEqual([date])
     expect(wrapper.emitted().mouseLeaveDates).toBeTruthy()
-
-    const navigationWrapper = wrapper.find(CalendarNavigation)
-    navigationWrapper.vm.$emit('monthChange', date)
-    await flushPromises()
-    expect(wrapper.emitted().monthChange[0]).toEqual([date])
   })
 })

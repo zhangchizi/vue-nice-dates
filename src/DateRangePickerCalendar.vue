@@ -2,21 +2,21 @@
   <Calendar
     :locale="locale"
     :date="receivedDate"
-    :month="month"
+    :initial-date="initialDate"
     :minimum-date="minimumDate"
     :maximum-date="maximumDate"
-    :modifiers="mergeModifiers()"
+    :enable-grid-switch="enableGridSwitch"
+    :modifiers="mergedModifiers"
     :modifiers-class-names="modifiersClassNames"
     @clickDate="handleClickDate"
     @mouseEnterDate="handleMouseEnterDate"
     @mouseLeaveDates="handleMouseLeaveDates"
-    @monthChange="handleMonthChange"
   />
 </template>
 <script>
-import { isSameDay, isAfter, isBefore, parse, isValid, isEqual, format } from 'date-fns'
+import { isSameDay, isAfter, isBefore, parse, isValid, format } from 'date-fns'
 import { mergeModifiers, isSelectable } from './utils'
-import { START_DATE, END_DATE } from './constants'
+import { START_DATE, END_DATE, GRID_DAY } from './constants'
 import Calendar from './Calendar'
 
 export default {
@@ -41,7 +41,7 @@ export default {
       type: String,
       default: ''
     },
-    month: {
+    initialDate: {
       type: Date,
       default: undefined
     },
@@ -59,6 +59,10 @@ export default {
     maximumDate: {
       type: Date,
       default: null
+    },
+    enableGridSwitch: {
+      type: Boolean,
+      default: false
     },
     modifiers: {
       type: Object,
@@ -113,6 +117,30 @@ export default {
         return this.receivedStartDate
       }
       return this.receivedEndDate
+    },
+    mergedModifiers () {
+      const options = { minimumDate: this.minimumDate, maximumDate: this.maximumDate }
+      const isSelected = date =>
+        isSelectable(date, options) &&
+              (
+                this.isStartDate(date) ||
+                this.isMiddleDate(date) ||
+                this.isEndDate(date) ||
+                (!!this.receivedStartDate && isSameDay(date, this.receivedStartDate)) ||
+                (!!this.receivedEndDate && isSameDay(date, this.receivedEndDate))
+              )
+      const isDisabled = date => (this.focusName === START_DATE && this.isEndDate(date)) ||
+              (this.focusName === END_DATE && this.isStartDate(date))
+      return mergeModifiers(
+        {
+          selected: isSelected,
+          selectedStart: this.isStartDate,
+          selectedMiddle: this.isMiddleDate,
+          selectedEnd: this.isEndDate,
+          disabled: isDisabled
+        },
+        this.modifiers
+      )
     }
   },
   watch: {
@@ -126,7 +154,7 @@ export default {
       const parsedDate = parse(newValue, this.format, new Date())
       const isValid = this.isValidAndSelectable(parsedDate)
       if (isValid) {
-        if (this.receivedStartDate && isEqual(parsedDate, this.receivedStartDate)) return
+        if (this.receivedStartDate && isSameDay(parsedDate, this.receivedStartDate)) return
         if (this.receivedEndDate && isAfter(parsedDate, this.receivedEndDate)) {
           this.$emit('update:endDate', '')
           this.changeLastValidDate('EndDate', '')
@@ -145,7 +173,7 @@ export default {
       const parsedDate = parse(newValue, this.format, new Date())
       const isValid = this.isValidAndSelectable(parsedDate)
       if (isValid) {
-        if (this.receivedEndDate && isEqual(parsedDate, this.receivedEndDate)) return
+        if (this.receivedEndDate && isSameDay(parsedDate, this.receivedEndDate)) return
         if (this.receivedStartDate && isBefore(parsedDate, this.receivedStartDate)) {
           this.$emit('update:startDate', '')
           this.changeLastValidDate('StartDate', '')
@@ -192,8 +220,11 @@ export default {
         }
       }
     },
-    handleClickDate (date) {
-      this.$emit('clickDate', date)
+    handleClickDate (date, type) {
+      this.$emit('clickDate', date, type)
+
+      if (type !== GRID_DAY && !this.date) return
+
       if (this.focusName === START_DATE) {
         if (this.receivedEndDate && !isAfter(this.receivedEndDate, date)) {
           this.$emit('update:endDate', '')
@@ -202,8 +233,8 @@ export default {
         const dateString = format(date, this.format, { locale: this.locale })
         this.$emit('update:startDate', dateString)
       } else if (this.focusName === END_DATE) {
-        const invalidStartDate = this.receivedStartDate && !isBefore(this.receivedStartDate, date)
-
+        const invalidStartDate = this.receivedStartDate &&
+                                 !isBefore(this.receivedStartDate, date)
         if (invalidStartDate) {
           this.$emit('update:startDate', '')
         }
@@ -214,14 +245,9 @@ export default {
     },
     handleMouseEnterDate (date) {
       this.hoveredDate = date
-      this.$emit('mouseEnterDate', date)
     },
     handleMouseLeaveDates () {
       this.hoveredDate = null
-      this.$emit('mouseLeaveDates')
-    },
-    handleMonthChange (month) {
-      this.$emit('monthChange', month)
     },
     changeLastValidDate (name, date) {
       if (date instanceof Date) {
@@ -241,30 +267,7 @@ export default {
       if (!this.displayedStartDate || !this.displayedEndDate) return false
       return isSameDay(date, this.displayedEndDate) && isAfter(date, this.displayedStartDate)
     },
-    mergeModifiers () {
-      const options = { minimumDate: this.minimumDate, maximumDate: this.maximumDate }
-      const isSelected = date =>
-        isSelectable(date, options) &&
-              (
-                this.isStartDate(date) ||
-                this.isMiddleDate(date) ||
-                this.isEndDate(date) ||
-                (!!this.receivedStartDate && isSameDay(date, this.receivedStartDate)) ||
-                (!!this.receivedEndDate && isSameDay(date, this.receivedEndDate))
-              )
-      const isDisabled = date => (this.focusName === START_DATE && this.isEndDate(date)) ||
-              (this.focusName === END_DATE && this.isStartDate(date))
-      return mergeModifiers(
-        {
-          selected: isSelected,
-          selectedStart: this.isStartDate,
-          selectedMiddle: this.isMiddleDate,
-          selectedEnd: this.isEndDate,
-          disabled: isDisabled
-        },
-        this.modifiers
-      )
-    },
+
     isValidAndSelectable (date) {
       const options = { minimumDate: this.minimumDate, maximumDate: this.maximumDate }
       return isValid(date) && isSelectable(date, options) && this.validator(date)

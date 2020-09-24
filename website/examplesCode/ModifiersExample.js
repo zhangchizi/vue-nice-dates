@@ -13,12 +13,12 @@ const code = `
 <script>
 import { enGB } from 'date-fns/locale'
 import { getDay } from 'date-fns'
-import { DatePickerCalendar } from 'vue-nice-dates'
+import { DatePickerCalendar, GRID_DAY } from 'vue-nice-dates'
 import 'vue-nice-dates/dist/style.css'
 
 const modifiers = {
-  disabled: date => getDay(date) === 6, // Disables Saturdays
-  highlight: date => getDay(date) === 2 // Highlights Tuesdays
+  disabled: (date, type) => type === GRID_DAY && getDay(date) === 6, // Disables Saturdays
+  highlight: (date, type) => type === GRID_DAY && getDay(date) === 2 // Highlights Tuesdays
 }
 const modifiersClassNames = {
   highlight: '-highlight'

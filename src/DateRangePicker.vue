@@ -9,10 +9,11 @@
         :locale="locale"
         :start-date="receivedStartDate"
         :end-date="receivedEndDate"
-        :month="month"
+        :initial-date="initialDate"
         :focus-name="receivedFocusName"
         :minimum-date="minimumDate"
         :maximum-date="maximumDate"
+        :enable-grid-switch="enableGridSwitch"
         :modifiers="modifiers"
         :modifiers-class-names="modifiersClassNames"
         :validator="validator"
@@ -21,15 +22,12 @@
         @changeLastValidStartDate="changeLastValidStartDate"
         @changeLastValidEndDate="changeLastValidEndDate"
         @clickDate="handleClickDate"
-        @mouseEnterDate="handleMouseEnterDate"
-        @mouseLeaveDates="handleMouseLeaveDates"
-        @monthChange="handleMonthChange"
       />
     </Popover>
   </div>
 </template>
 <script>
-import { END_DATE, START_DATE } from './constants'
+import { END_DATE, START_DATE, GRID_DAY } from './constants'
 import { triggerBlurForTouchDevice } from '../src/utils'
 import DateRangePickerCalendar from './DateRangePickerCalendar'
 import Popover from './Popover'
@@ -63,7 +61,7 @@ export default {
       type: String,
       default: ''
     },
-    month: {
+    initialDate: {
       type: Date,
       default: undefined
     },
@@ -77,6 +75,10 @@ export default {
       validator (value) {
         return [START_DATE, END_DATE, ''].indexOf(value) > -1
       }
+    },
+    enableGridSwitch: {
+      type: Boolean,
+      default: false
     },
     minimumDate: {
       type: Date,
@@ -146,7 +148,9 @@ export default {
     document.removeEventListener('focusin', this.handleFocusIn)
   },
   methods: {
-    handleClickDate (date) {
+    handleClickDate (date, type) {
+      if (type !== GRID_DAY && !this.date) return
+
       // Triggered after 'receivedStartDate' and 'receivedEndDate' updated.
       this.$nextTick(() => {
         if (this.receivedFocusName === START_DATE) {
@@ -162,20 +166,12 @@ export default {
             this.receivedFocusName = START_DATE
           }
         }
-        if (this.$data.$hasTouchedStartDate && this.$data.$hasTouchedEndDate) {
+        if (this.$data.$hasTouchedStartDate &&
+            this.$data.$hasTouchedEndDate) {
           this.receivedIsFocus = false
           triggerBlurForTouchDevice()
         }
       })
-    },
-    handleMouseEnterDate (date) {
-      this.$emit('mouseEnterDate', date)
-    },
-    handleMouseLeaveDates (date) {
-      this.$emit('mouseLeaveDates', date)
-    },
-    handleMonthChange (month) {
-      this.$emit('monthChange', month)
     },
     changeLastValidStartDate (dateString) {
       this.$data.$lastValidStartDate = dateString
@@ -185,7 +181,7 @@ export default {
     },
     updateReceivedStartDate (dataString) {
       if (!dataString) {
-        // update the receivedStartDate before handleClickDate()
+        // update 'receivedStartDate' before 'handleClickDate()'
         this.receivedStartDate = dataString
         this.$data.$hasTouchedStartDate = false
       }
@@ -193,7 +189,7 @@ export default {
     },
     updateReceivedEndDate (dataString) {
       if (!dataString) {
-        // update the receivedStartDate before handleClickDate()
+        // update 'receivedStartDate' before 'handleClickDate()'
         this.receivedEndDate = dataString
         this.$data.$hasTouchedEndDate = false
       }

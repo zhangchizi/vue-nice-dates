@@ -3,6 +3,7 @@ import { enGB } from 'date-fns/locale'
 import flushPromises from 'flush-promises'
 import DatePickerCalendar from '../src/DatePickerCalendar'
 import Calendar from '../src/Calendar'
+import { GRID_DAY } from '../src/constants'
 
 describe('DatePickerCalendar.vue', () => {
   let wrapper = null
@@ -96,32 +97,13 @@ describe('DatePickerCalendar.vue', () => {
     })
   })
 
-  it('isSelected() determines whether a date has been seleted', async () => {
-    expect(wrapper.vm.isSelected()).toBe(false)
-    wrapper.setProps({
-      date: '02/02/2020'
-    })
-    await flushPromises()
-    expect(wrapper.vm.isSelected(new Date(2020, 1, 2))).toBe(true)
-  })
-
-  it('should merge "selected" and "disabled" modifiers', () => {
-    expect(wrapper.vm.mergeModifiers().selected).toBeTruthy()
-    expect(wrapper.vm.mergeModifiers().disabled).toBeTruthy()
-  })
-
   it('should emit events', async () => {
     const calendarWrapper = wrapper.find(Calendar)
     const date = new Date()
-    calendarWrapper.vm.$emit('clickDate', date)
-    calendarWrapper.vm.$emit('mouseEnterDate', date)
-    calendarWrapper.vm.$emit('monthChange', date)
-    calendarWrapper.vm.$emit('mouseLeaveDates')
+    const type = GRID_DAY
+    calendarWrapper.vm.$emit('clickDate', date, type)
     await flushPromises()
     expect(wrapper.emitted()['update:date']).toBeTruthy()
-    expect(wrapper.emitted().clickDate[0]).toEqual([date])
-    expect(wrapper.emitted().mouseEnterDate[0]).toEqual([date])
-    expect(wrapper.emitted().monthChange[0]).toEqual([date])
-    expect(wrapper.emitted().mouseLeaveDates).toBeTruthy()
+    expect(wrapper.emitted().clickDate[0]).toEqual([date, type])
   })
 })

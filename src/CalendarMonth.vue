@@ -1,32 +1,29 @@
 <template>
   <div
-    class="nice-dates-day"
-    :class="dayClassNames"
+    class="nice-dates-month"
+    :class="monthClassNames"
   >
-    <span
-      v-if="dayOfMonth === 1"
-      class="nice-dates-day_month"
-    >{{ monthString }}</span>
-    <span class="nice-dates-day_item">{{ dayOfMonth }}</span>
+    <span class="nice-dates-month_item">{{ monthText }}</span>
   </div>
 </template>
 <script>
-import { getDate, format, isToday } from 'date-fns'
+import { format, isSameMonth } from 'date-fns'
 
 const defaultModifiersClassNames = {
   today: '-today',
   outside: '-outside',
   wide: '-wide',
   disabled: '-disabled',
-  selected: '-selected',
-  selectedStart: '-selected-start',
-  selectedMiddle: '-selected-middle',
-  selectedEnd: '-selected-end'
+  selected: '-selected'
 }
 
 export default {
-  name: 'CalendarDay',
+  name: 'CalendarMonth',
   props: {
+    locale: {
+      required: true,
+      type: Object
+    },
     date: {
       required: true,
       type: Date
@@ -42,33 +39,24 @@ export default {
       default () {
         return {}
       }
-    },
-    locale: {
-      required: true,
-      type: Object
-    }
-  },
-  data () {
-    return {
-      dayOfMonth: getDate(this.date)
     }
   },
   computed: {
+    monthText () {
+      return format(this.date, 'MMM', { locale: this.locale })
+    },
     computedModifiersClassNames () {
       return { ...defaultModifiersClassNames, ...this.modifiersClassNames }
     },
     computedModifiers () {
-      return { today: isToday(this.date), ...this.modifiers }
+      return { today: isSameMonth(this.date, new Date()), ...this.modifiers }
     },
-    dayClassNames () {
+    monthClassNames () {
       const result = {}
       Object.keys(this.computedModifiers).forEach(name => {
         result[this.computedModifiersClassNames[name]] = this.computedModifiers[name]
       })
       return result
-    },
-    monthString () {
-      return format(this.date, 'MMMM', { locale: this.locale }).substring(0, 3)
     }
   }
 }

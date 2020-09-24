@@ -1,22 +1,24 @@
 <template>
-  <div
-    class="nice-dates-grid_container"
-    :class="classObject"
-    :style="styleObject"
-    @mouseleave.prevent="handleMouseLeaveDates"
-  >
-    <calendar-day
-      v-for="day in days"
-      :key="lightFormat(day)"
-      :date="day"
-      :locale="locale"
-      :height="cellHeight"
-      :modifiers="generateModifiers(day)"
-      :modifiers-class-names="modifiersClassNames"
-      @click.native.prevent="handleClickDate(day)"
-      @mouseenter.native.prevent="handleMouseEnterDate(day)"
-      @touch.native.passive="handleClickDate(day)"
-    />
+  <div class="nice-dates-grid_wrapper">
+    <div
+      class="nice-dates-grid_container"
+      :class="classObject"
+      :style="styleObject"
+      @mouseleave.prevent="handleMouseLeaveDates"
+    >
+      <calendar-day
+        v-for="day in days"
+        :key="lightFormat(day)"
+        :date="day"
+        :locale="locale"
+        :style="styleForItem"
+        :modifiers="generateModifiers(day)"
+        :modifiers-class-names="modifiersClassNames"
+        @click.native.prevent="handleClickDate(day)"
+        @mouseenter.native.prevent="handleMouseEnterDate(day)"
+        @touch.native.passive="handleClickDate(day)"
+      />
+    </div>
   </div>
 </template>
 
@@ -32,11 +34,12 @@ import {
   endOfMonth,
   endOfWeek,
   isAfter,
-  isEqual,
-  startOfWeek
+  startOfWeek,
+  isSameDay
 } from 'date-fns'
-import { ORIGIN_BOTTOM, ORIGIN_TOP } from './constants'
+import { ORIGIN_BOTTOM, ORIGIN_TOP, TRANSITION_DURATION, GRID_DAY } from './constants'
 import CalendarDay from './CalendarDay'
+import { invokeModifiers } from './utils'
 
 export default {
   name: 'CalendarDays',
@@ -48,9 +51,16 @@ export default {
       required: true,
       type: Object
     },
-    month: {
+    initialDate: {
       required: true,
       type: Date
+    },
+    date: {
+      type: [Date, String],
+      default: '',
+      validator (value) {
+        return value instanceof Date || value === ''
+      }
     },
     cellHeight: {
       type: Number,
@@ -71,10 +81,6 @@ export default {
       default () {
         return {}
       }
-    },
-    transitionDuration: {
-      type: Number,
-      default: 500
     }
   },
   data () {
@@ -84,9 +90,9 @@ export default {
       offset: 0,
       origin: ORIGIN_TOP,
       transition: false,
+      transitionDuration: TRANSITION_DURATION,
       days: [],
-      $timeoutId: null,
-      $hasMounted: false
+      $timeoutId: null
     }
   },
   computed: {
@@ -103,41 +109,31 @@ export default {
         transform: `translate3d(0, ${this.offset}px, 0)`,
         transitionDuration: `${this.transitionDuration}ms`
       }
+    },
+    styleForItem () {
+      return { height: this.cellHeight + 'px' }
     }
   },
   watch: {
-    month (newValue, oldValue) {
+    initialDate (newValue, oldValue) {
       if (isSameMonth(newValue, oldValue)) return
-      this.transitionToCurrentMonth(newValue, oldValue)
-    },
-    startDate (newValue, oldValue) {
-      if (!this.$data.$hasMounted) return
-      if (isEqual(newValue, oldValue)) return
-      this.generateDays({ startDate: newValue })
-    },
-    endDate (newValue, oldValue) {
-      if (!this.$data.$hasMounted) return
-      if (isEqual(newValue, oldValue)) return
-      this.generateDays({ endDate: newValue })
+      this.transitionToCurrentDate(newValue, oldValue)
     }
   },
   created () {
-    this.resetData()
-    this.generateDays()
+    this.initDates()
   },
-  mounted () {
-    this.$nextTick(() => {
-      this.$data.$hasMounted = true
-    })
+  beforeDestroy () {
+    clearTimeout(this.$data.$timeoutId)
   },
   methods: {
-    resetData (month = this.month) {
-      this.startDate = this.getStartDate(month, this.locale)
-      this.endDate = this.getEndDate(month, this.locale)
+    initDates (date = this.initialDate) {
+      this.startDate = this.getStartDate(date, this.locale)
+      this.endDate = this.getEndDate(date, this.locale)
       this.offset = 0
       this.transition = false
+      this.generateDays()
     },
-
     generateDays ({ startDate = this.startDate, endDate = this.endDate } = {}) {
       this.days = eachDayOfInterval({
         start: startDate,
@@ -145,7 +141,7 @@ export default {
       })
     },
     handleClickDate (date) {
-      this.$emit('clickDate', date)
+      this.$emit('clickDate', date, GRID_DAY)
     },
     handleMouseEnterDate (date) {
       this.$emit('mouseEnterDate', date)
@@ -155,17 +151,11 @@ export default {
     },
     generateModifiers (date) {
       return {
-        ...this.computeModifiers(this.modifiers, date),
-        outside: !isSameMonth(date, this.month),
+        selected: isSameDay(date, this.date || null),
+        ...invokeModifiers(this.modifiers, date, GRID_DAY),
+        outside: !isSameMonth(date, this.initialDate),
         wide: this.isWide
       }
-    },
-    computeModifiers (modifiers, date) {
-      const computedModifiers = {}
-      Object.keys(modifiers).map(key => {
-        computedModifiers[key] = modifiers[key](date)
-      })
-      return computedModifiers
     },
     lightFormat (date, format = 'yyyy-MM-dd') {
       return lightFormat(date, format)
@@ -182,29 +172,31 @@ export default {
     rowsBetweenDates (startDate, endDate, locale) {
       return differenceInCalendarWeeks(endDate, startDate, { locale }) + 1
     },
-    transitionToCurrentMonth (month, oldMonth) {
+    transitionToCurrentDate (date, oldDate) {
       clearTimeout(this.$data.$timeoutId)
-      const diffs = differenceInCalendarMonths(month, oldMonth)
+      const diffs = differenceInCalendarMonths(date, oldDate)
       if (Math.abs(diffs) < 3) {
         this.transition = true
-        month = startOfMonth(month)
-        if (isAfter(month, oldMonth)) {
-          const rows = this.rowsBetweenDates(this.startDate, month, this.locale) - 1
+        date = startOfMonth(date)
+        if (isAfter(date, oldDate)) {
+          const rows = this.rowsBetweenDates(this.startDate, date, this.locale) - 1
           this.offset = -rows * this.cellHeight
-          this.endDate = this.getEndDate(month, this.locale)
+          const endDate = this.getEndDate(date, this.locale)
+          this.generateDays({ endDate })
           this.origin = ORIGIN_TOP
         } else {
           const gridHeight = this.cellHeight * 6
-          const rows = this.rowsBetweenDates(month, this.endDate, this.locale)
-          this.startDate = this.getStartDate(month, this.locale)
+          const rows = this.rowsBetweenDates(date, this.endDate, this.locale)
+          const startDate = this.getStartDate(date, this.locale)
+          this.generateDays({ startDate })
           this.offset = rows * this.cellHeight - gridHeight
           this.origin = ORIGIN_BOTTOM
         }
         this.$data.$timeoutId = setTimeout(() => {
-          this.resetData(month)
+          this.initDates(date)
         }, this.transitionDuration)
       } else {
-        this.resetData(month)
+        this.initDates(date)
       }
     }
   }
