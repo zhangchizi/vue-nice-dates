@@ -10,11 +10,19 @@ export const mergeModifiers = (baseModifiers, newModifiers) => {
   const modifiers = { ...baseModifiers }
   Object.keys(newModifiers).forEach(name => {
     modifiers[name] = baseModifiers[name]
-      ? date => baseModifiers[name](date) || newModifiers[name](date)
+      ? (date, type) => baseModifiers[name](date, type) || newModifiers[name](date, type)
       : newModifiers[name]
   })
 
   return modifiers
+}
+
+export const invokeModifiers = (modifiers, date, type) => {
+  const ret = {}
+  Object.keys(modifiers).map(key => {
+    ret[key] = modifiers[key](date, type)
+  })
+  return ret
 }
 
 export const triggerBlurForTouchDevice = () => {

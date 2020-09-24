@@ -1,7 +1,7 @@
 import { shallowMount } from '@vue/test-utils'
 import { enGB } from 'date-fns/locale'
 import flushPromises from 'flush-promises'
-import { START_DATE, END_DATE } from '../src/constants'
+import { START_DATE, END_DATE, GRID_DAY } from '../src/constants'
 import DateRangePickerCalendar from '../src/DateRangePickerCalendar'
 import Calendar from '../src/Calendar'
 
@@ -77,14 +77,14 @@ describe('DateRangePickerCalendar.vue', () => {
     })
   })
 
-  describe('when a day in the calendar was clicked', () => {
+  describe('when a day in the calendar is clicked', () => {
     it('should clear the endDate if the startDate is after it', async () => {
       wrapper.setProps({
         endDate: '02/02/2020'
       })
       await flushPromises()
       const calendarWrapper = wrapper.find(Calendar)
-      calendarWrapper.vm.$emit('clickDate', new Date(2020, 3, 3))
+      calendarWrapper.vm.$emit('clickDate', new Date(2020, 3, 3), GRID_DAY)
       await flushPromises()
       expect(wrapper.emitted()['update:endDate'][0]).toEqual([''])
       expect(wrapper.emitted()['update:startDate'][0]).toEqual(['03/04/2020'])
@@ -97,7 +97,7 @@ describe('DateRangePickerCalendar.vue', () => {
       })
       await flushPromises()
       const calendarWrapper = wrapper.find(Calendar)
-      calendarWrapper.vm.$emit('clickDate', new Date(2020, 1, 1))
+      calendarWrapper.vm.$emit('clickDate', new Date(2020, 1, 1), GRID_DAY)
       await flushPromises()
       expect(wrapper.emitted()['update:startDate'][0]).toEqual([''])
       expect(wrapper.emitted()['update:endDate'][0]).toEqual(['01/02/2020'])
@@ -280,7 +280,7 @@ describe('DateRangePickerCalendar.vue', () => {
           startDate: '02/02/2020',
           endDate: '03/03/2020'
         })
-        const modifiers = wrapper.vm.mergeModifiers()
+        const modifiers = wrapper.vm.mergedModifiers
         await flushPromises()
         expect(modifiers.selected(new Date(2020, 1, 2))).toBe(true)
         expect(modifiers.selected(new Date(2020, 1, 3))).toBe(true)
@@ -291,7 +291,7 @@ describe('DateRangePickerCalendar.vue', () => {
         wrapper.setProps({
           startDate: '02/02/2020'
         })
-        const modifiers = wrapper.vm.mergeModifiers()
+        const modifiers = wrapper.vm.mergedModifiers
         await flushPromises()
         expect(modifiers.selected(new Date(2020, 1, 2))).toBe(true)
       })
@@ -300,7 +300,7 @@ describe('DateRangePickerCalendar.vue', () => {
         wrapper.setProps({
           endDate: '03/03/2020'
         })
-        const modifiers = wrapper.vm.mergeModifiers()
+        const modifiers = wrapper.vm.mergedModifiers
         await flushPromises()
         expect(modifiers.selected(new Date(2020, 2, 3))).toBe(true)
       })
@@ -313,7 +313,7 @@ describe('DateRangePickerCalendar.vue', () => {
           endDate: '03/03/2020',
           focusName: END_DATE
         })
-        const modifiers = wrapper.vm.mergeModifiers()
+        const modifiers = wrapper.vm.mergedModifiers
         await flushPromises()
         expect(modifiers.disabled(new Date(2020, 1, 2))).toBe(true)
       })
@@ -323,7 +323,7 @@ describe('DateRangePickerCalendar.vue', () => {
           startDate: '02/02/2020',
           endDate: '03/03/2020'
         })
-        const modifiers = wrapper.vm.mergeModifiers()
+        const modifiers = wrapper.vm.mergedModifiers
         await flushPromises()
         expect(modifiers.disabled(new Date(2020, 2, 3))).toBe(true)
       })
@@ -344,14 +344,13 @@ describe('DateRangePickerCalendar.vue', () => {
   it('should emit events', async () => {
     const calendarWrapper = wrapper.find(Calendar)
     const date = new Date()
-    calendarWrapper.vm.$emit('clickDate', date)
+    const type = 'type'
+    calendarWrapper.vm.$emit('clickDate', date, type)
     calendarWrapper.vm.$emit('mouseEnterDate', date)
-    calendarWrapper.vm.$emit('monthChange', date)
     calendarWrapper.vm.$emit('mouseLeaveDates')
     await flushPromises()
-    expect(wrapper.emitted().clickDate[0]).toEqual([date])
-    expect(wrapper.emitted().mouseEnterDate[0]).toEqual([date])
-    expect(wrapper.emitted().monthChange[0]).toEqual([date])
-    expect(wrapper.emitted().mouseLeaveDates).toBeTruthy()
+    expect(wrapper.emitted().clickDate[0]).toEqual([date, type])
+    expect(wrapper.emitted().mouseEnterDate).toBeFalsy()
+    expect(wrapper.emitted().mouseLeaveDates).toBeFalsy()
   })
 })

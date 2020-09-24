@@ -1,17 +1,13 @@
 <template>
   <div
-    class="nice-dates-day"
-    :class="dayClassNames"
+    class="nice-dates-year"
+    :class="yearClassNames"
   >
-    <span
-      v-if="dayOfMonth === 1"
-      class="nice-dates-day_month"
-    >{{ monthString }}</span>
-    <span class="nice-dates-day_item">{{ dayOfMonth }}</span>
+    <span class="nice-dates-year_item">{{ yearText }}</span>
   </div>
 </template>
 <script>
-import { getDate, format, isToday } from 'date-fns'
+import { format, isSameYear } from 'date-fns'
 
 const defaultModifiersClassNames = {
   today: '-today',
@@ -25,8 +21,12 @@ const defaultModifiersClassNames = {
 }
 
 export default {
-  name: 'CalendarDay',
+  name: 'CalendarYear',
   props: {
+    locale: {
+      required: true,
+      type: Object
+    },
     date: {
       required: true,
       type: Date
@@ -42,33 +42,24 @@ export default {
       default () {
         return {}
       }
-    },
-    locale: {
-      required: true,
-      type: Object
-    }
-  },
-  data () {
-    return {
-      dayOfMonth: getDate(this.date)
     }
   },
   computed: {
+    yearText () {
+      return format(this.date, 'yyyy', { locale: this.locale })
+    },
     computedModifiersClassNames () {
       return { ...defaultModifiersClassNames, ...this.modifiersClassNames }
     },
     computedModifiers () {
-      return { today: isToday(this.date), ...this.modifiers }
+      return { today: isSameYear(this.date, new Date()), ...this.modifiers }
     },
-    dayClassNames () {
+    yearClassNames () {
       const result = {}
       Object.keys(this.computedModifiers).forEach(name => {
         result[this.computedModifiersClassNames[name]] = this.computedModifiers[name]
       })
       return result
-    },
-    monthString () {
-      return format(this.date, 'MMMM', { locale: this.locale }).substring(0, 3)
     }
   }
 }

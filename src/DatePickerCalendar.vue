@@ -2,22 +2,21 @@
   <Calendar
     :locale="locale"
     :date="receivedDate"
-    :month="month"
+    :initial-date="initialDate"
+    :enable-grid-switch="enableGridSwitch"
     :minimum-date="minimumDate"
     :maximum-date="maximumDate"
-    :modifiers="mergeModifiers()"
+    :modifiers="modifiers"
     :modifiers-class-names="modifiersClassNames"
     @clickDate="handleClickDate"
-    @mouseEnterDate="handleMouseEnterDate"
-    @mouseLeaveDates="handleMouseLeaveDates"
-    @monthChange="handleMonthChange"
   />
 </template>
 
 <script>
-import { parse, isSameDay, isValid, format, isEqual } from 'date-fns'
-import { mergeModifiers, isSelectable, triggerBlurForTouchDevice } from './utils'
+import { parse, isValid, format, isSameDay } from 'date-fns'
+import { isSelectable } from './utils'
 import Calendar from './Calendar'
+import { GRID_DAY } from './constants'
 
 export default {
   name: 'DatePickerCalendar',
@@ -37,9 +36,13 @@ export default {
       required: true,
       type: String
     },
-    month: {
+    initialDate: {
       type: Date,
       default: undefined
+    },
+    enableGridSwitch: {
+      type: Boolean,
+      default: false
     },
     modifiers: {
       type: Object,
@@ -83,7 +86,7 @@ export default {
       const parsedDate = parse(newValue, this.format, new Date())
       const isValid = this.isValidAndSelectable(parsedDate)
       if (isValid) {
-        if (this.receivedDate && isEqual(parsedDate, this.receivedDate)) return
+        if (this.receivedDate && isSameDay(parsedDate, this.receivedDate)) return
         this.receivedDate = parsedDate
         this.changeLastValidDate(parsedDate)
       }
@@ -106,39 +109,23 @@ export default {
         this.$emit('update:date', '')
       }
     },
-    isSelected (date) {
-      if (!this.receivedDate) return false
-      const options = { minimumDate: this.minimumDate, maximumDate: this.maximumDate }
-      return isSameDay(date, this.receivedDate) && isSelectable(date, options)
-    },
     isValidAndSelectable (date) {
       const options = { minimumDate: this.minimumDate, maximumDate: this.maximumDate }
       return isValid(date) && isSelectable(date, options) && this.validator(date)
     },
-    mergeModifiers () {
-      const baseModifiers = { selected: this.isSelected, disabled: this.isSelected }
-      return mergeModifiers(baseModifiers, this.modifiers)
-    },
-    handleClickDate (date) {
-      this.$emit('clickDate', date)
+    handleClickDate (date, type) {
+      this.$emit('clickDate', date, type)
       const dateString = format(date, this.format, { locale: this.locale })
-      this.$emit('update:date', dateString)
-      triggerBlurForTouchDevice()
+      // for Using this component independently
+      if (type === GRID_DAY || this.date) {
+        this.$emit('update:date', dateString)
+      }
     },
     changeLastValidDate (date) {
       if (date instanceof Date) {
         date = format(date, this.format, { locale: this.locale })
       }
       this.$emit('changeLastValidDate', date)
-    },
-    handleMouseEnterDate (date) {
-      this.$emit('mouseEnterDate', date)
-    },
-    handleMouseLeaveDates () {
-      this.$emit('mouseLeaveDates')
-    },
-    handleMonthChange (month) {
-      this.$emit('monthChange', month)
     }
   }
 }

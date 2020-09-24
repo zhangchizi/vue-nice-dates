@@ -1,7 +1,7 @@
 import { shallowMount } from '@vue/test-utils'
 import { enGB } from 'date-fns/locale'
 import flushPromises from 'flush-promises'
-import { START_DATE } from '../src/constants'
+import { GRID_DAY, START_DATE } from '../src/constants'
 import DateRangePicker from '../src/DateRangePicker'
 import DateRangePickerCalendar from '../src/DateRangePickerCalendar'
 
@@ -92,9 +92,9 @@ describe('DateRangePicker.vue', () => {
         isFocus: true
       })
       const calendarWrapper = wrapper.find(DateRangePickerCalendar)
-      calendarWrapper.vm.$emit('clickDate', new Date())
+      calendarWrapper.vm.$emit('clickDate', new Date(), GRID_DAY)
       await flushPromises()
-      calendarWrapper.vm.$emit('clickDate', new Date())
+      calendarWrapper.vm.$emit('clickDate', new Date(), GRID_DAY)
       await flushPromises()
       expect(wrapper.vm.receivedIsFocus).toBe(false)
     })
@@ -191,21 +191,5 @@ describe('DateRangePicker.vue', () => {
     await flushPromises()
     expect(wrapper.vm.$data.$lastValidStartDate).toBe(dateString)
     expect(wrapper.vm.$data.$lastValidEndDate).toBe(dateString)
-  })
-
-  it('should emit events', async () => {
-    const calendarWrapper = wrapper.find(DateRangePickerCalendar)
-    const date = new Date()
-    calendarWrapper.vm.$emit('update:startDate', date)
-    calendarWrapper.vm.$emit('update:endDate', date)
-    calendarWrapper.vm.$emit('mouseEnterDate', date)
-    calendarWrapper.vm.$emit('monthChange', date)
-    calendarWrapper.vm.$emit('mouseLeaveDates')
-    await flushPromises()
-    expect(wrapper.emitted()['update:startDate'][0]).toEqual([date])
-    expect(wrapper.emitted()['update:endDate'][0]).toEqual([date])
-    expect(wrapper.emitted().mouseEnterDate[0]).toEqual([date])
-    expect(wrapper.emitted().monthChange[0]).toEqual([date])
-    expect(wrapper.emitted().mouseLeaveDates).toBeTruthy()
   })
 })

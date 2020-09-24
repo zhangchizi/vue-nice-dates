@@ -13,10 +13,11 @@
 import { enGB } from 'date-fns/locale'
 import { DatePickerCalendar } from '../src'
 import { getDay } from 'date-fns'
+import { GRID_DAY } from '../src/constants'
 
 const modifiers = {
-  disabled: date => getDay(date) === 6, // Disables Saturdays
-  highlight: date => getDay(date) === 2 // Highlights Tuesdays
+  disabled: (date, type) => type === GRID_DAY && getDay(date) === 6, // Disables Saturdays
+  highlight: (date, type) => type === GRID_DAY && getDay(date) === 2 // Highlights Tuesdays
 }
 const modifiersClassNames = {
   highlight: '-highlight'

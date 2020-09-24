@@ -1,6 +1,7 @@
 import { shallowMount } from '@vue/test-utils'
 import { enGB } from 'date-fns/locale'
 import flushPromises from 'flush-promises'
+import { GRID_DAY } from '../src/constants'
 import DatePicker from '../src/DatePicker'
 import DatePickerCalendar from '../src/DatePickerCalendar'
 
@@ -57,13 +58,13 @@ describe('DatePicker.vue', () => {
       expect(wrapper.vm.receivedIsFocus).toBe(true)
     })
 
-    it('should close popover if a day in the calendar is clicked', async () => {
+    it('should close popover if a day in the calendar is clicked and the type of grid is "day"', async () => {
       wrapper.setProps({
         isFocus: true
       })
       await flushPromises()
       const calendarWrapper = wrapper.find(DatePickerCalendar)
-      calendarWrapper.vm.$emit('clickDate', new Date())
+      calendarWrapper.vm.$emit('clickDate', new Date(), GRID_DAY)
       await flushPromises()
       expect(wrapper.vm.receivedIsFocus).toBe(false)
     })
@@ -136,19 +137,5 @@ describe('DatePicker.vue', () => {
     calendarWrapper.vm.$emit('changeLastValidDate', dateString)
     await flushPromises()
     expect(wrapper.vm.$data.$lastValidDate).toBe(dateString)
-  })
-
-  it('should emit events', async () => {
-    const calendarWrapper = wrapper.find(DatePickerCalendar)
-    const date = new Date()
-    calendarWrapper.vm.$emit('clickDate', date)
-    calendarWrapper.vm.$emit('mouseEnterDate', date)
-    calendarWrapper.vm.$emit('monthChange', date)
-    calendarWrapper.vm.$emit('mouseLeaveDates')
-    await flushPromises()
-    expect(wrapper.emitted()['update:date']).toBeTruthy()
-    expect(wrapper.emitted().mouseEnterDate[0]).toEqual([date])
-    expect(wrapper.emitted().monthChange[0]).toEqual([date])
-    expect(wrapper.emitted().mouseLeaveDates).toBeTruthy()
   })
 })

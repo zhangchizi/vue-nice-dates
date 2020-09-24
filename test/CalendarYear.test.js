@@ -2,15 +2,13 @@ import {
   mount
 } from '@vue/test-utils'
 import {
-  setDate
-} from 'date-fns'
-import {
   enGB
 } from 'date-fns/locale'
-import CalendarDay from '../src/CalendarDay'
+import { format } from 'date-fns'
+import CalendarYear from '../src/CalendarYear'
 
 function factory (props) {
-  return mount(CalendarDay, {
+  return mount(CalendarYear, {
     propsData: {
       locale: enGB,
       ...props
@@ -18,32 +16,14 @@ function factory (props) {
   })
 }
 
-describe('CalendarDay.vue', () => {
-  it('should display day', () => {
+describe('CalendarYear.vue', () => {
+  it('should display year', () => {
     const date = new Date()
     const wrapper = factory({
       date
     })
-    expect(wrapper.get('.nice-dates-day_item').text()).toBe(date.getDate().toString())
-  })
-
-  it('should display month if it is the first day of month', () => {
-    let date = new Date()
-    date = setDate(date, 1)
-    const wrapper = factory({
-      date
-    })
-    const month = enGB.localize.month(date.getMonth())
-    expect(wrapper.get('.nice-dates-day_month').text()).toBe(month.substr(0, 3))
-  })
-
-  it('should not display month if it is not the first day of month', () => {
-    let date = new Date()
-    date = setDate(date, 2)
-    const wrapper = factory({
-      date
-    })
-    expect(wrapper.contains('.nice-dates-day_month')).toBe(false)
+    const text = format(date, 'yyyy', { locale: enGB })
+    expect(wrapper.get('.nice-dates-year_item').text()).toBe(text)
   })
 
   it('should map class names to boolean', () => {
@@ -56,7 +36,7 @@ describe('CalendarDay.vue', () => {
       date,
       modifiers
     })
-    expect(wrapper.vm.dayClassNames).toMatchObject({
+    expect(wrapper.vm.yearClassNames).toMatchObject({
       '-disabled': false,
       '-selected': true
     })

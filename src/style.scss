@@ -2,6 +2,7 @@ $nice-dates-color-gray-dark: #333 !default;
 $nice-dates-color-gray: #999 !default;
 $nice-dates-color-gray-light: #ddd !default;
 $nice-dates-color-accent: $nice-dates-color-gray-dark !default;
+$nice-dates-color-white: #fff !default;
 
 $nice-dates-font-size-small: 12px !default;
 $nice-dates-font-size-base: 14px !default;
@@ -22,9 +23,12 @@ $nice-dates-cell-width: calc(100% / 7);
     &_current {
       flex-grow: 1;
       font-size: $nice-dates-font-size-big;
+      cursor: pointer;
+      user-select: none;
     }
 
-    &_previous, &_next {
+    &_previous,
+    &_next {
       cursor: pointer;
       height: 0;
       padding-bottom: $nice-dates-cell-width;
@@ -79,14 +83,25 @@ $nice-dates-cell-width: calc(100% / 7);
       text-align: center;
       text-transform: capitalize;
       width: $nice-dates-cell-width;
+      transition: opacity .2s;
+      user-select: none;
+
+      &.-outside {
+        opacity: .5;
+      }
     }
   }
 
   &-grid {
     box-sizing: content-box;
-    overflow: hidden;
-    position: relative;
     user-select: none;
+
+    &_wrapper {
+      box-sizing: content-box;
+      position: relative;
+      overflow: hidden;
+      height: 100%;
+    }
 
     &_container {
       backface-visibility: hidden;
@@ -95,11 +110,9 @@ $nice-dates-cell-width: calc(100% / 7);
       left: 0;
       position: absolute;
       right: 0;
-      transition-timing-function: cubic-bezier(.4, 0, .2, 1);
       transition-property: none;
-      will-change: transform;
 
-      &.-moving .nice-dates-day_date {
+      &.-moving .nice-dates-day_item {
         transition: 300ms color;
       }
 
@@ -114,12 +127,15 @@ $nice-dates-cell-width: calc(100% / 7);
       }
 
       &.-transition {
+        will-change: transform;
         transition-property: transform;
       }
     }
   }
 
-  &-day {
+  &-day,
+  &-month,
+  &-year {
     border-top: 1px solid transparent;
     box-sizing: border-box;
     color: $nice-dates-color-gray-dark;
@@ -133,10 +149,10 @@ $nice-dates-cell-width: calc(100% / 7);
     justify-content: center;
     flex-direction: column;
 
-    &_date {
+    &_item {
       transition: 150ms color;
-      will-change: color;
       z-index: 3;
+      user-select: none;
     }
 
     &_month {
@@ -151,7 +167,8 @@ $nice-dates-cell-width: calc(100% / 7);
       z-index: 3;
     }
 
-    &:before, &:after {
+    &:before,
+    &:after {
       border-radius: 50%;
       bottom: 0;
       box-sizing: border-box;
@@ -190,7 +207,7 @@ $nice-dates-cell-width: calc(100% / 7);
       }
 
       &.-selected * {
-        color: #fff;
+        color: $nice-dates-color-white;
       }
     }
 
@@ -201,13 +218,14 @@ $nice-dates-cell-width: calc(100% / 7);
 
       &:hover {
         &:after {
-          background-color: #fff;
+          background-color: $nice-dates-color-white;
         }
       }
 
-      &:not(:hover), &.-disabled {
+      &:not(:hover),
+      &.-disabled {
         * {
-          color: #fff;
+          color: $nice-dates-color-white;
         }
       }
 
@@ -250,13 +268,6 @@ $nice-dates-cell-width: calc(100% / 7);
       font-weight: 600;
     }
 
-    &.-wide {
-      &:before, &:after {
-        left: 12.5%;
-        right: 12.5%;
-      }
-    }
-
     &.-outside {
       color: $nice-dates-color-gray;
     }
@@ -268,8 +279,59 @@ $nice-dates-cell-width: calc(100% / 7);
     }
   }
 
+  &-day {
+    &.-wide {
+
+      &:before,
+      &:after {
+        // 12.5% = (1-0.75)/2
+        // 0.75: breakpoint in the file--CalendarGrid.vue
+        left: 12.5%;
+        right: 12.5%;
+      }
+    }
+  }
+
+  // month grid
+  &-year,
+  &-month {
+    width: calc(100% / 4);
+
+    &:before,
+    &:after {
+      // 15.72% = (6/5)/(7/4)/2
+      // 6: rows of days grid, 5: rows of months grid, 7:cols of days, 4: cols of months
+      left: 15.72%;
+      right: 15.72%;
+    }
+
+    &.-wide {
+
+      // 24.28% = (6/5*0.75)/(7/4)/2
+      // 0.75: breakpoint in the file--CalendarGrid.vue
+      &:before,
+      &:after {
+        left: 24.28%;
+        right: 24.28%;
+      }
+    }
+
+    &.-selected {
+      color: $nice-dates-color-white;
+
+      &:hover {
+        color: $nice-dates-color-gray-dark;
+      }
+
+      &:after {
+        border: 2px solid $nice-dates-color-accent;
+      }
+    }
+  }
+
+  // popover
   &-popover {
-    background-color: #fff;
+    background-color: $nice-dates-color-white;
     border-radius: 8px;
     box-shadow: 0 1px 8px rgba(#000, .12);
     margin: 8px 0;
@@ -281,7 +343,7 @@ $nice-dates-cell-width: calc(100% / 7);
     transition-duration: 400ms;
     transition-timing-function: cubic-bezier(.4, .2, 0, 1.1);
     width: 100%;
-    will-change: transform, opacity;
+    opacity: 1;
     z-index: 9;
 
     &:not(.-open) {
@@ -290,4 +352,48 @@ $nice-dates-cell-width: calc(100% / 7);
       transform: perspective(1000px) rotateX(-15deg);
     }
   }
+}
+
+
+// transition for switching grid 
+.niceDatesOut-enter-active,
+.niceDatesOut-leave-active,
+.niceDatesIn-enter-active,
+.niceDatesIn-leave-active {
+  transition-property: transform, opacity;
+  transition-duration: 250ms;
+  transition-timing-function: ease-out;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.niceDatesIn-leave-to {
+  opacity: 0;
+  transform: scale(.8);
+}
+
+.niceDatesIn-enter {
+  opacity: 0;
+  transform: scale(1.2);
+}
+
+.niceDatesIn-enter-to {
+  opacity: 1;
+  transform: scale(1);
+}
+
+// reverse transition for switching grid
+.niceDatesOut-enter-to {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.niceDatesOut-enter {
+  opacity: 0;
+  transform: scale(.8);
+}
+
+.niceDatesOut-leave-to {
+  opacity: 0;
+  transform: scale(1.2);
 }

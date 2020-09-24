@@ -9,17 +9,15 @@
         :locale="locale"
         :format="format"
         :date="receivedDate"
-        :month="month"
+        :initial-date="initialDate"
         :minimum-date="minimumDate"
         :maximum-date="maximumDate"
+        :enable-grid-switch="enableGridSwitch"
         :modifiers="modifiers"
         :modifiers-class-names="modifiersClassNames"
         :validator="validator"
         @changeLastValidDate="changeLastValidDate"
         @clickDate="handleClickDate"
-        @mouseEnterDate="handleMouseEnterDate"
-        @mouseLeaveDates="handleMouseLeaveDates"
-        @monthChange="handleMonthChange"
       />
     </Popover>
   </div>
@@ -28,6 +26,8 @@
 import { format } from 'date-fns'
 import DatePickerCalendar from './DatePickerCalendar'
 import Popover from './Popover'
+import { triggerBlurForTouchDevice } from './utils'
+import { GRID_DAY } from './constants'
 
 export default {
   name: 'DatePicker',
@@ -48,13 +48,17 @@ export default {
       required: true,
       type: String
     },
-    month: {
+    initialDate: {
       type: Date,
       default: undefined
     },
     format: {
       type: String,
       default: 'dd/MM/yyyy'
+    },
+    enableGridSwitch: {
+      type: Boolean,
+      default: false
     },
     modifiers: {
       type: Object,
@@ -107,19 +111,15 @@ export default {
     document.removeEventListener('focusin', this.handleFocusIn)
   },
   methods: {
-    handleClickDate (date) {
-      this.receivedIsFocus = false
+    handleClickDate (date, type) {
       const dateString = format(date, this.format, { locale: this.locale })
-      this.$emit('update:date', dateString)
-    },
-    handleMouseEnterDate (date) {
-      this.$emit('mouseEnterDate', date)
-    },
-    handleMouseLeaveDates () {
-      this.$emit('mouseLeaveDates')
-    },
-    handleMonthChange (month) {
-      this.$emit('monthChange', month)
+      if (type === GRID_DAY) {
+        this.receivedIsFocus = false
+        triggerBlurForTouchDevice()
+      }
+      if (type === GRID_DAY || this.date) {
+        this.$emit('update:date', dateString)
+      }
     },
     changeLastValidDate (dateString) {
       this.$data.$lastValidDate = dateString

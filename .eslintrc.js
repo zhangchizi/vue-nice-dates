@@ -16,7 +16,6 @@ module.exports = {
       html: {
         normal: 'never'
       }
-    }],
-    'vue/no-v-html': 0
+    }]
   }
 }
