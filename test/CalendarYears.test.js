@@ -10,7 +10,8 @@ describe('CalendarYears.vue', () => {
   const initialDate = new Date(2020, 2, 2)
   const requiedProps = {
     initialDate,
-    locale: enGB
+    locale: enGB,
+    cellHeight: 20
   }
   beforeEach(() => {
     wrapper = shallowMount(CalendarYears, {
