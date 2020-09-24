@@ -22,7 +22,7 @@
         <DatePickerExample />
         <VueCodeHighlight>{{ DatePickerExampleCode }}</VueCodeHighlight>
       </div>
-      <p><em>Hint: If you are using a touch device, you can also change the current month <del>by dragging the calendar grid up or down</del> (not supported yet).</em></p>
+      <p><em>Hint: you can click the header of calendar to select year and month.(<code>enableGridSwitch</code> prop)</em></p>
       <p>Here's a more complete example, this time using the <code>DateRangePicker</code> component:</p>
       <!-- DateRangePicker example -->
       <div class="example">
@@ -132,19 +132,14 @@
       <VueCodeHighlight>
         /* props */
         date: String, // Require .sync modifier
-        month: Date, // The month that the calendar shows
+        initialDate: Date, // Date to initialize the calendar
         locale: Object, // required; date-fns locale object
         format: String, // Default: 'dd/MM/yyyy'
         minimumDate: Date, // Days before minimumDate will be disabled
         maximumDate: Date, // Days after maximumDate will be disabled
-        modifiers: Object, // Only contains functions that receive a date and return a boolean
-        modifiersClassNames: Object, // See Customizing days above
+        modifiers: Object, // Only contains functions that receive a date and a type and return a boolean
+        modifiersClassNames: Object, // See "Customizing days" above
         validator: Function // Custom date validation function. Recieves a date and must return a boolean.
-
-        /* events */
-        mouseEnterDate, // Triggered when mouse enters a day; argument: the date
-        mouseLeaveDates, // Triggered when mouse leaves the grid of days
-        monthChange // Triggered when change the month; argument: the month
       </VueCodeHighlight>
       <!-- API: DateRangePicker -->
       <h3><code>DateRangePicker</code></h3>
@@ -153,7 +148,7 @@
         startDate: String, // Require .sync modifier
         endDate: String, // Require .sync modifier
         focusName: String, // Require .sync modifier; Default: START_DATE; Can be START_DATE or END_DATE; Indicates which date will be chosen
-        month: Date,
+        initialDate: Date,
         locale: Object, // required
         format: String, // Default: 'dd/MM/yyyy'
         minimumDate: Date,
@@ -161,18 +156,13 @@
         modifiers: Object,
         modifiersClassNames: Object
         validator: Function
-
-        /* events */
-        mouseEnterDate,
-        mouseLeaveDates,
-        monthChange
       </VueCodeHighlight>
       <!-- API:DatePickerCalendar -->
       <h3><code>DatePickerCalendar</code></h3>
       <VueCodeHighlight>
         /* props */
         date: String, // Require .sync modifier
-        month: Date,
+        initialDate: Date,
         locale: Object, // required
         format: String, // Default: 'dd/MM/yyyy'
         minimumDate: Date,
@@ -182,11 +172,7 @@
         validator: Function
 
         /* events */
-        clickDate, // Triggered when click a day; argument: the date
         changeLastValidDate, // Triggered if the date is valid
-        mouseEnterDate,
-        mouseLeaveDates,
-        monthChange
       </VueCodeHighlight>
       <!-- API: DateRangePickerCalendar -->
       <h3><code>DateRangePickerCalendar</code></h3>
@@ -195,7 +181,7 @@
         startDate: String, // Require .sync modifier
         endDate: String, // Require .sync modifier
         focusName: String, // Default: START_DATE; Can be START_DATE or END_DATE; Indicates which date will be chosen
-        month: Date,
+        initialDate: Date, Date to initialize the calendar
         locale: Object, // required
         format: String, // Default: 'dd/MM/yyyy'
         minimumDate: Date,
@@ -206,17 +192,16 @@
 
         /* events */
         clickDate,
-        changeLastValidStartDate, // Triggered if the start date is valid
-        changeLastValidEndDate, // Triggered if the end date is valid
+        changeLastValidStartDate, // Triggered if the startDate is valid
+        changeLastValidEndDate, // Triggered if the endDate is valid
         mouseEnterDate,
         mouseLeaveDates,
-        monthChange
       </VueCodeHighlight>
       <!-- API: Calendar -->
       <h3><code>Calendar</code></h3>
       <VueCodeHighlight>
         /* props */
-        month: Date, // The month that the calendar shows
+        initialDate: Date, // Date to initialize the calendar
         locale: Object, // required
         format: String, // Default: 'dd/MM/yyyy'
         minimumDate: Date,
@@ -227,8 +212,7 @@
         /* events */
         clickDate,
         mouseEnterDate,
-        mouseLeaveDates,
-        monthChange
+        mouseLeaveDates
       </VueCodeHighlight>
       <footer>
         <div class="text-light">
