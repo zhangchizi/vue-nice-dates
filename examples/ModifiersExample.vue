@@ -5,6 +5,7 @@
       :locale="locale"
       :modifiers="modifiers"
       :modifiers-class-names="modifiersClassNames"
+      enable-grid-switch
     />
   </div>
 </template>

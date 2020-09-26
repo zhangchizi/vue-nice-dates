@@ -60,6 +60,7 @@
           <VueCodeHighlight>{{ ModifiersExampleCode }}</VueCodeHighlight>
         </details>
       </div>
+      <p>What is <code>type = GRID_DAY </code>? There are three types: GRID_DAY, GRID_MONTH, GRID_YEAR. Indicate which grid the calendar displays.</p>
       <h3>Implementing your own date-picking behavior</h3>
       <p>If you need to implement a date-picking behavior not covered by the previous components, you can use the <code>Calendar</code> component directly (<code>DatePickerCalendar</code> and<code>DateRangePickerCalendar</code> are themselves wrappers around this component). It accepts callbacks for when a day is clicked or hovered, which you can then use to create modifiers to control which days are selected.</p>
       <!-- CalendarExample -->
@@ -114,6 +115,7 @@
         $nice-dates-color-gray-dark: #333;
         $nice-dates-color-gray: #999;
         $nice-dates-color-gray-light: #ddd;
+        $nice-dates-color-white: #fff;
         $nice-dates-color-accent: $nice-dates-color-gray-dark;
 
         $nice-dates-font-size-small: 12px;
