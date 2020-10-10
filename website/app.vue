@@ -60,7 +60,7 @@
           <VueCodeHighlight>{{ ModifiersExampleCode }}</VueCodeHighlight>
         </details>
       </div>
-      <p>What is <code>type = GRID_DAY </code>? There are three types: GRID_DAY, GRID_MONTH, GRID_YEAR. Indicate which grid the calendar displays.</p>
+      <p>What is <code>type === GRID_DAY </code>? There are three types: <code>GRID_DAY</code> ,<code> GRID_MONTH</code> , <code>GRID_YEAR</code> . Indicate which grid the calendar displays. It's useful if you set <code>enableGridSwitch</code> prop</p>
       <h3>Implementing your own date-picking behavior</h3>
       <p>If you need to implement a date-picking behavior not covered by the previous components, you can use the <code>Calendar</code> component directly (<code>DatePickerCalendar</code> and<code>DateRangePickerCalendar</code> are themselves wrappers around this component). It accepts callbacks for when a day is clicked or hovered, which you can then use to create modifiers to control which days are selected.</p>
       <!-- CalendarExample -->
@@ -149,7 +149,7 @@
         /* props */
         startDate: String, // Require .sync modifier
         endDate: String, // Require .sync modifier
-        focusName: String, // Require .sync modifier; Default: START_DATE; Can be START_DATE or END_DATE; Indicates which date will be chosen
+        focusName: String, // Default: START_DATE; Can be START_DATE or END_DATE; Indicates which date will be chosen
         initialDate: Date,
         locale: Object, // required
         format: String, // Default: 'dd/MM/yyyy'
@@ -174,7 +174,7 @@
         validator: Function
 
         /* events */
-        changeLastValidDate, // Triggered if the date is valid
+        changeLastValidDate, // Triggered if the date is changed and the value is valid
       </VueCodeHighlight>
       <!-- API: DateRangePickerCalendar -->
       <h3><code>DateRangePickerCalendar</code></h3>
@@ -194,8 +194,8 @@
 
         /* events */
         clickDate,
-        changeLastValidStartDate, // Triggered if the startDate is valid
-        changeLastValidEndDate, // Triggered if the endDate is valid
+        changeLastValidStartDate, // Triggered if the startDate is changed and the value is valid
+        changeLastValidEndDate, // Triggered if the endDate is changed and the value is valid
         mouseEnterDate,
         mouseLeaveDates,
       </VueCodeHighlight>
