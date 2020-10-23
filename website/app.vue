@@ -174,7 +174,8 @@
         validator: Function
 
         /* events */
-        changeLastValidDate, // Triggered if the date is changed and the value is valid
+        clickDate, // Triggered if clicks a date. Receives the date.
+        changeLastValidDate // Triggered if the date is changed and the value is valid
       </VueCodeHighlight>
       <!-- API: DateRangePickerCalendar -->
       <h3><code>DateRangePickerCalendar</code></h3>
@@ -193,11 +194,9 @@
         validator: Function
 
         /* events */
-        clickDate,
+        clickDate, // Triggered if clicks a date. Receives the date.
         changeLastValidStartDate, // Triggered if the startDate is changed and the value is valid
         changeLastValidEndDate, // Triggered if the endDate is changed and the value is valid
-        mouseEnterDate,
-        mouseLeaveDates,
       </VueCodeHighlight>
       <!-- API: Calendar -->
       <h3><code>Calendar</code></h3>
@@ -213,8 +212,8 @@
 
         /* events */
         clickDate,
-        mouseEnterDate,
-        mouseLeaveDates
+        mouseEnterDate, // Triggered if mouse enters a date. receives the date.
+        mouseLeaveDates // Triggered if mouse leaves the grid of calendar.
       </VueCodeHighlight>
       <footer>
         <div class="text-light">

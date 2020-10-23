@@ -34,9 +34,11 @@ export default {
     }
   },
   methods: {
+    // you don't need this if set "readonly=true" to <input>
     changeLastValidDate (date) {
       this.lastValidDate = date
     },
+    // you don't need this if set "readonly=true" to <input>
     handleFocusOut () {
       this.date = this.lastValidDate
     }
