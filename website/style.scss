@@ -36,7 +36,7 @@ h3 {
   font-family: 'Poppins', sans-serif;
   line-height: 1.25;
 
-  +p {
+  + p {
     margin-top: 1em;
   }
 }
@@ -45,8 +45,8 @@ h1 {
   font-size: 40px;
   margin: 0;
 
-  +p {
-    margin-top: .5em;
+  + p {
+    margin-top: 0.5em;
   }
 }
 
@@ -198,7 +198,7 @@ input {
   border-radius: 3px;
   margin: 3em 0;
 
-  &>div {
+  & > div {
     margin: 24px 0;
     position: relative;
     transform: translate(0);
@@ -212,7 +212,7 @@ input {
   @media screen and (max-width: 480px) {
     border: none;
 
-    &>div {
+    & > div {
       margin: 0 0 24px;
 
       &:first-child {
@@ -227,7 +227,7 @@ input {
 
   p {
     font-size: 16px;
-    margin: 0 0 .5em;
+    margin: 0 0 0.5em;
   }
 }
 

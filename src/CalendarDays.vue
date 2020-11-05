@@ -37,7 +37,12 @@ import {
   startOfWeek,
   isSameDay
 } from 'date-fns'
-import { ORIGIN_BOTTOM, ORIGIN_TOP, TRANSITION_DURATION, GRID_DAY } from './constants'
+import {
+  ORIGIN_BOTTOM,
+  ORIGIN_TOP,
+  TRANSITION_DURATION,
+  GRID_DAY
+} from './constants'
 import CalendarDay from './CalendarDay'
 import { invokeModifiers } from './utils'
 
@@ -58,7 +63,7 @@ export default {
     date: {
       type: [Date, String],
       default: '',
-      validator (value) {
+      validator(value) {
         return value instanceof Date || value === ''
       }
     },
@@ -72,18 +77,18 @@ export default {
     },
     modifiers: {
       type: Object,
-      default () {
+      default() {
         return {}
       }
     },
     modifiersClassNames: {
       type: Object,
-      default () {
+      default() {
         return {}
       }
     }
   },
-  data () {
+  data() {
     return {
       startDate: null,
       endDate: null,
@@ -96,7 +101,7 @@ export default {
     }
   },
   computed: {
-    classObject () {
+    classObject() {
       return {
         '-moving': !!this.offset,
         '-origin-bottom': this.origin === ORIGIN_BOTTOM,
@@ -104,52 +109,52 @@ export default {
         '-transition': !!this.transition
       }
     },
-    styleObject () {
+    styleObject() {
       return {
         transform: `translate3d(0, ${this.offset}px, 0)`,
         transitionDuration: `${this.transitionDuration}ms`
       }
     },
-    styleForItem () {
+    styleForItem() {
       return { height: this.cellHeight + 'px' }
     }
   },
   watch: {
-    initialDate (newValue, oldValue) {
+    initialDate(newValue, oldValue) {
       if (isSameMonth(newValue, oldValue)) return
       this.transitionToCurrentDate(newValue, oldValue)
     }
   },
-  created () {
+  created() {
     this.initDates()
   },
-  beforeDestroy () {
+  beforeDestroy() {
     clearTimeout(this.$data.$timeoutId)
   },
   methods: {
-    initDates (date = this.initialDate) {
+    initDates(date = this.initialDate) {
       this.startDate = this.getStartDate(date, this.locale)
       this.endDate = this.getEndDate(date, this.locale)
       this.offset = 0
       this.transition = false
       this.generateDays()
     },
-    generateDays ({ startDate = this.startDate, endDate = this.endDate } = {}) {
+    generateDays({ startDate = this.startDate, endDate = this.endDate } = {}) {
       this.days = eachDayOfInterval({
         start: startDate,
         end: endDate
       })
     },
-    handleClickDate (date) {
+    handleClickDate(date) {
       this.$emit('clickDate', date, GRID_DAY)
     },
-    handleMouseEnterDate (date) {
+    handleMouseEnterDate(date) {
       this.$emit('mouseEnterDate', date)
     },
-    handleMouseLeaveDates () {
+    handleMouseLeaveDates() {
       this.$emit('mouseLeaveDates')
     },
-    generateModifiers (date) {
+    generateModifiers(date) {
       return {
         selected: isSameDay(date, this.date || null),
         ...invokeModifiers(this.modifiers, date, GRID_DAY),
@@ -157,29 +162,33 @@ export default {
         wide: this.isWide
       }
     },
-    lightFormat (date, format = 'yyyy-MM-dd') {
+    lightFormat(date, format = 'yyyy-MM-dd') {
       return lightFormat(date, format)
     },
-    getStartDate (date, locale) {
+    getStartDate(date, locale) {
       return startOfWeek(startOfMonth(date), { locale })
     },
-    getEndDate (date, locale) {
-      return endOfWeek(addWeeks(endOfMonth(date), 6 - this.rowsInMonth(date, locale)), { locale })
+    getEndDate(date, locale) {
+      return endOfWeek(
+        addWeeks(endOfMonth(date), 6 - this.rowsInMonth(date, locale)),
+        { locale }
+      )
     },
-    rowsInMonth (date, locale) {
+    rowsInMonth(date, locale) {
       return this.rowsBetweenDates(startOfMonth(date), endOfMonth(date), locale)
     },
-    rowsBetweenDates (startDate, endDate, locale) {
+    rowsBetweenDates(startDate, endDate, locale) {
       return differenceInCalendarWeeks(endDate, startDate, { locale }) + 1
     },
-    transitionToCurrentDate (date, oldDate) {
+    transitionToCurrentDate(date, oldDate) {
       clearTimeout(this.$data.$timeoutId)
       const diffs = differenceInCalendarMonths(date, oldDate)
       if (Math.abs(diffs) < 3) {
         this.transition = true
         date = startOfMonth(date)
         if (isAfter(date, oldDate)) {
-          const rows = this.rowsBetweenDates(this.startDate, date, this.locale) - 1
+          const rows =
+            this.rowsBetweenDates(this.startDate, date, this.locale) - 1
           this.offset = -rows * this.cellHeight
           const endDate = this.getEndDate(date, this.locale)
           this.generateDays({ endDate })

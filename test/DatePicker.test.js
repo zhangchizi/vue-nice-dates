@@ -81,7 +81,9 @@ describe('DatePicker.vue', () => {
       await flushPromises()
       document.dispatchEvent(new Event('mousedown'))
       expect(wrapper.vm.receivedIsFocus).toBe(false)
-      expect(wrapper.emitted()['update:date'][0]).toEqual([wrapper.vm.$data.$lastValidDate])
+      expect(wrapper.emitted()['update:date'][0]).toEqual([
+        wrapper.vm.$data.$lastValidDate
+      ])
       wrapper.destroy()
     })
 

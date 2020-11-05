@@ -24,10 +24,27 @@
 </template>
 
 <script>
-import { endOfYear, startOfYear, eachMonthOfInterval, addMonths, subMonths, isSameYear, isSameMonth, startOfMonth, getYear, isAfter, lightFormat } from 'date-fns'
+import {
+  endOfYear,
+  startOfYear,
+  eachMonthOfInterval,
+  addMonths,
+  subMonths,
+  isSameYear,
+  isSameMonth,
+  startOfMonth,
+  getYear,
+  isAfter,
+  lightFormat
+} from 'date-fns'
 import CalendarMonth from './CalendarMonth'
 import { invokeModifiers } from './utils'
-import { ORIGIN_BOTTOM, ORIGIN_TOP, TRANSITION_DURATION, GRID_MONTH } from './constants'
+import {
+  ORIGIN_BOTTOM,
+  ORIGIN_TOP,
+  TRANSITION_DURATION,
+  GRID_MONTH
+} from './constants'
 
 const GRID_ROWS = 5
 const GRID_COLS = 4
@@ -49,7 +66,7 @@ export default {
     date: {
       type: [Date, String],
       default: '',
-      validator (value) {
+      validator(value) {
         return value instanceof Date || value === ''
       }
     },
@@ -63,18 +80,18 @@ export default {
     },
     modifiers: {
       type: Object,
-      default () {
+      default() {
         return {}
       }
     },
     modifiersClassNames: {
       type: Object,
-      default () {
+      default() {
         return {}
       }
     }
   },
-  data () {
+  data() {
     return {
       startDate: null,
       endDate: null,
@@ -87,7 +104,7 @@ export default {
     }
   },
   computed: {
-    classObject () {
+    classObject() {
       return {
         '-moving': !!this.offset,
         '-origin-bottom': this.origin === ORIGIN_BOTTOM,
@@ -95,52 +112,55 @@ export default {
         '-transition': !!this.transition
       }
     },
-    styleObject () {
+    styleObject() {
       return {
         transform: `translate3d(0, ${this.offset}px, 0)`,
         transitionDuration: `${this.transitionDuration}ms`
       }
     },
-    styleForItem () {
-      return { height: this.cellHeight * 6 / GRID_ROWS + 'px' }
+    styleForItem() {
+      return { height: (this.cellHeight * 6) / GRID_ROWS + 'px' }
     }
   },
   watch: {
-    initialDate (newValue, oldValue) {
+    initialDate(newValue, oldValue) {
       if (isSameYear(newValue, oldValue)) return
       this.transitionToCurrentDate(newValue, oldValue)
     }
   },
-  created () {
+  created() {
     this.initMonths()
   },
-  beforeDestroy () {
+  beforeDestroy() {
     clearTimeout(this.$data.$timeoutId)
   },
   methods: {
-    initMonths (date = this.initialDate) {
+    initMonths(date = this.initialDate) {
       this.startDate = subMonths(startOfYear(date), GRID_COLS)
       this.endDate = addMonths(startOfMonth(endOfYear(date)), GRID_COLS)
       this.offset = 0
       this.transition = false
       this.generateMonths()
     },
-    generateMonths ({ startDate = this.startDate, endDate = this.endDate } = {}) {
+    generateMonths({
+      startDate = this.startDate,
+      endDate = this.endDate
+    } = {}) {
       this.months = eachMonthOfInterval({
         start: startDate,
         end: endDate
       })
     },
-    handleClickDate (date) {
+    handleClickDate(date) {
       this.$emit('clickDate', date, GRID_MONTH)
     },
-    handleMouseEnterDate (date) {
+    handleMouseEnterDate(date) {
       this.$emit('mouseEnterDate', date)
     },
-    handleMouseLeaveDates () {
+    handleMouseLeaveDates() {
       this.$emit('mouseLeaveDates')
     },
-    generateModifiers (month) {
+    generateModifiers(month) {
       return {
         selected: isSameMonth(month, this.date || null),
         ...invokeModifiers(this.modifiers, month, GRID_MONTH),
@@ -148,12 +168,12 @@ export default {
         wide: this.isWide
       }
     },
-    transitionToCurrentDate (date, oldDate) {
+    transitionToCurrentDate(date, oldDate) {
       clearTimeout(this.$data.$timeoutId)
       const diffs = Math.abs(getYear(date) - getYear(oldDate))
       if (diffs < 3) {
         this.transition = true
-        const offset = this.cellHeight * 6 / GRID_ROWS * 3
+        const offset = ((this.cellHeight * 6) / GRID_ROWS) * 3
         const count = GRID_COLS * (GRID_ROWS - 1)
         if (isAfter(date, oldDate)) {
           this.offset = -offset
@@ -173,7 +193,7 @@ export default {
         this.initMonths(date)
       }
     },
-    lightFormat (date, format = 'yyyy-MM-dd') {
+    lightFormat(date, format = 'yyyy-MM-dd') {
       return lightFormat(date, format)
     }
   }

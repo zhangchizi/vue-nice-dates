@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>selected start date: {{ startDate }}</div>
-    <div>selected end   date: {{ endDate }}</div>
+    <div>selected end date: {{ endDate }}</div>
     <div>currently selecting: {{ focusName }}</div>
     <DateRangePickerCalendar
       :start-date.sync="startDate"
@@ -21,7 +21,7 @@ export default {
   components: {
     DateRangePickerCalendar
   },
-  data () {
+  data() {
     return {
       startDate: '',
       endDate: '',
@@ -30,7 +30,7 @@ export default {
     }
   },
   methods: {
-    handleClickDate () {
+    handleClickDate() {
       if (this.focusName === START_DATE) {
         this.focusName = END_DATE
       } else {
@@ -39,5 +39,4 @@ export default {
     }
   }
 }
-
 </script>

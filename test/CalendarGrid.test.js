@@ -3,7 +3,12 @@ import { enGB } from 'date-fns/locale'
 import flushPromises from 'flush-promises'
 import CalendarGrid from '../src/CalendarGrid'
 import CalendarDays from '../src/CalendarDays'
-import { GRID_DAY, GRID_MONTH, TRANSITION_NAME_IN, TRANSITION_NAME_OUT } from '../src/constants'
+import {
+  GRID_DAY,
+  GRID_MONTH,
+  TRANSITION_NAME_IN,
+  TRANSITION_NAME_OUT
+} from '../src/constants'
 
 describe('CalendarGrid.vue', () => {
   let wrapper = null

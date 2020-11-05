@@ -1,15 +1,9 @@
-import {
-  mount
-} from '@vue/test-utils'
-import {
-  setDate
-} from 'date-fns'
-import {
-  enGB
-} from 'date-fns/locale'
+import { mount } from '@vue/test-utils'
+import { setDate } from 'date-fns'
+import { enGB } from 'date-fns/locale'
 import CalendarDay from '../src/CalendarDay'
 
-function factory (props) {
+function factory(props) {
   return mount(CalendarDay, {
     propsData: {
       locale: enGB,
@@ -24,7 +18,9 @@ describe('CalendarDay.vue', () => {
     const wrapper = factory({
       date
     })
-    expect(wrapper.get('.nice-dates-day_item').text()).toBe(date.getDate().toString())
+    expect(wrapper.get('.nice-dates-day_item').text()).toBe(
+      date.getDate().toString()
+    )
   })
 
   it('should display month if it is the first day of month', () => {

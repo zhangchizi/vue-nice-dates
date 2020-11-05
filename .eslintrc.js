@@ -5,17 +5,26 @@ module.exports = {
     'jest/globals': true
   },
   parser: 'vue-eslint-parser',
-  extends: ['standard', 'plugin:jest/recommended', 'plugin:vue/recommended'],
+  extends: [
+    'standard',
+    'plugin:jest/recommended',
+    'plugin:vue/recommended',
+    'plugin:prettier/recommended'
+  ],
   parserOptions: {
     ecmaVersion: 2018,
     sourceType: 'module'
   },
-  plugins: ['jest','vue'],
+  plugins: ['jest', 'vue', 'prettier'],
   rules: {
-    'vue/html-self-closing': ['error', {
-      html: {
-        normal: 'never'
+    'prettier/prettier': 'error',
+    'vue/html-self-closing': [
+      'error',
+      {
+        html: {
+          normal: 'never'
+        }
       }
-    }]
+    ]
   }
 }

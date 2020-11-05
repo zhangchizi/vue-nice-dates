@@ -27,14 +27,14 @@ export default {
     }
   },
   computed: {
-    classObject () {
+    classObject() {
       return {
         '-outside': this.gridType !== GRID_DAY
       }
     }
   },
   methods: {
-    weekDays () {
+    weekDays() {
       const today = new Date()
       const options = {
         locale: this.locale
@@ -42,7 +42,7 @@ export default {
       return eachDayOfInterval({
         start: startOfWeek(today, options),
         end: endOfWeek(today, options)
-      }).map(date => format(date, 'eee', options))
+      }).map((date) => format(date, 'eee', options))
     }
   }
 }

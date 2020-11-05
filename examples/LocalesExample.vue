@@ -1,28 +1,22 @@
 <template>
   <div>
     <p>US English:</p>
-    <DatePicker
-      :locale="langEnUS"
-      :date.sync="date1"
-    >
+    <DatePicker :locale="langEnUS" :date.sync="date1">
       <input
         v-model="date1"
         type="text"
         placeholder="dd/mm/yyyy"
         :readonly="isReadonly"
-      >
+      />
     </DatePicker>
     <p>Spanish:</p>
-    <DatePicker
-      :locale="langEs"
-      :date.sync="date2"
-    >
+    <DatePicker :locale="langEs" :date.sync="date2">
       <input
         v-model="date2"
         type="text"
         placeholder="dd/mm/yyyy"
         :readonly="isReadonly"
-      >
+      />
     </DatePicker>
   </div>
 </template>
@@ -36,7 +30,7 @@ export default {
   components: {
     DatePicker
   },
-  data () {
+  data() {
     return {
       langEnUS: enUS,
       langEs: es,

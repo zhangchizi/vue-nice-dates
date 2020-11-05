@@ -1,16 +1,12 @@
 <template>
   <div>
-    <DatePicker
-      :date.sync="date"
-      :locale="locale"
-      enable-grid-switch
-    >
+    <DatePicker :date.sync="date" :locale="locale" enable-grid-switch>
       <input
         v-model.trim="date"
         type="text"
         :readonly="isReadOnly"
         placeholder="dd/mm/yyyy"
-      >
+      />
     </DatePicker>
   </div>
 </template>
@@ -23,7 +19,7 @@ export default {
   components: {
     DatePicker
   },
-  data () {
+  data() {
     return {
       date: '',
       locale: enGB,
@@ -31,5 +27,4 @@ export default {
     }
   }
 }
-
 </script>

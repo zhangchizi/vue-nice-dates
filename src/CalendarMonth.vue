@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="nice-dates-month"
-    :class="monthClassNames"
-  >
+  <div class="nice-dates-month" :class="monthClassNames">
     <span class="nice-dates-month_item">{{ monthText }}</span>
   </div>
 </template>
@@ -30,31 +27,33 @@ export default {
     },
     modifiers: {
       type: Object,
-      default () {
+      default() {
         return {}
       }
     },
     modifiersClassNames: {
       type: Object,
-      default () {
+      default() {
         return {}
       }
     }
   },
   computed: {
-    monthText () {
+    monthText() {
       return format(this.date, 'MMM', { locale: this.locale })
     },
-    computedModifiersClassNames () {
+    computedModifiersClassNames() {
       return { ...defaultModifiersClassNames, ...this.modifiersClassNames }
     },
-    computedModifiers () {
+    computedModifiers() {
       return { today: isSameMonth(this.date, new Date()), ...this.modifiers }
     },
-    monthClassNames () {
+    monthClassNames() {
       const result = {}
-      Object.keys(this.computedModifiers).forEach(name => {
-        result[this.computedModifiersClassNames[name]] = this.computedModifiers[name]
+      Object.keys(this.computedModifiers).forEach((name) => {
+        result[this.computedModifiersClassNames[name]] = this.computedModifiers[
+          name
+        ]
       })
       return result
     }

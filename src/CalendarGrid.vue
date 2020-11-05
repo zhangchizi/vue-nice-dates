@@ -1,14 +1,6 @@
 <template>
-  <div
-    ref="gridElementRef"
-    class="nice-dates-grid"
-    :style="styleObjectGrid"
-  >
-    <transition
-      :name="transitionName"
-      appear
-      mode="out-in"
-    >
+  <div ref="gridElementRef" class="nice-dates-grid" :style="styleObjectGrid">
+    <transition :name="transitionName" appear mode="out-in">
       <keep-alive>
         <component
           :is="componentName"
@@ -28,11 +20,16 @@
   </div>
 </template>
 <script>
-
 import CalendarDays from './CalendarDays'
 import CalendarMonths from './CalendarMonths'
 import CalendarYears from './CalendarYears'
-import { GRID_DAY, GRID_MONTH, GRID_YEAR, TRANSITION_NAME_IN, TRANSITION_NAME_OUT } from './constants'
+import {
+  GRID_DAY,
+  GRID_MONTH,
+  GRID_YEAR,
+  TRANSITION_NAME_IN,
+  TRANSITION_NAME_OUT
+} from './constants'
 
 const CELL_WIDTH_BREAKPOINT = 60
 
@@ -51,7 +48,7 @@ export default {
     date: {
       type: [Date, String],
       default: '',
-      validator (value) {
+      validator(value) {
         return value instanceof Date || value === ''
       }
     },
@@ -65,18 +62,18 @@ export default {
     },
     modifiers: {
       type: Object,
-      default () {
+      default() {
         return {}
       }
     },
     modifiersClassNames: {
       type: Object,
-      default () {
+      default() {
         return {}
       }
     }
   },
-  data () {
+  data() {
     return {
       cellHeight: 0,
       isWide: false,
@@ -84,15 +81,15 @@ export default {
     }
   },
   computed: {
-    styleObjectGrid () {
+    styleObjectGrid() {
       return { height: this.cellHeight * 6 + 'px' }
     },
-    componentName () {
+    componentName() {
       return `calendar-${this.gridType}s`
     }
   },
   watch: {
-    gridType (newValue, oldValue) {
+    gridType(newValue, oldValue) {
       const map = {
         [GRID_DAY]: 0,
         [GRID_MONTH]: 1,
@@ -105,15 +102,15 @@ export default {
       }
     }
   },
-  mounted () {
+  mounted() {
     this.initCell()
     window.addEventListener('resize', this.initCell)
   },
-  beforeDestroy () {
+  beforeDestroy() {
     window.removeEventListener('resize', this.initCell)
   },
   methods: {
-    initCell () {
+    initCell() {
       const containerWidth = this.$refs.gridElementRef.offsetWidth
       const cellWidth = containerWidth / 7
       if (cellWidth > CELL_WIDTH_BREAKPOINT) {
@@ -125,13 +122,13 @@ export default {
         this.isWide = false
       }
     },
-    handleClickDate (date, type) {
+    handleClickDate(date, type) {
       this.$emit('clickDate', date, type)
     },
-    handleMouseEnterDate (date) {
+    handleMouseEnterDate(date) {
       this.$emit('mouseEnterDate', date)
     },
-    handleMouseLeaveDates () {
+    handleMouseLeaveDates() {
       this.$emit('mouseLeaveDates')
     }
   }

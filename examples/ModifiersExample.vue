@@ -32,7 +32,7 @@ export default {
   components: {
     DatePickerCalendar
   },
-  data () {
+  data() {
     return {
       date: '',
       locale: enGB,

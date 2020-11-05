@@ -12,7 +12,7 @@
           :data-nice-dates="START_DATE"
           :readonly="isReadOnly"
           placeholder="dd/mm/yyyy"
-        >
+        />
         <span class="date-range_arrow"></span>
         <input
           v-model.trim="endDate"
@@ -20,7 +20,7 @@
           :data-nice-dates="END_DATE"
           :readonly="isReadOnly"
           placeholder="dd/mm/yyyy"
-        >
+        />
       </div>
     </DateRangePicker>
   </div>
@@ -34,7 +34,7 @@ export default {
   components: {
     DateRangePicker
   },
-  data () {
+  data() {
     return {
       START_DATE,
       END_DATE,
@@ -45,5 +45,4 @@ export default {
     }
   }
 }
-
 </script>

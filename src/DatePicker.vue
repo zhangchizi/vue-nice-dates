@@ -1,8 +1,5 @@
 <template>
-  <div
-    ref="containerRef"
-    class="nice-dates"
-  >
+  <div ref="containerRef" class="nice-dates">
     <slot></slot>
     <Popover :is-open="receivedIsFocus">
       <DatePickerCalendar
@@ -62,13 +59,13 @@ export default {
     },
     modifiers: {
       type: Object,
-      default () {
+      default() {
         return {}
       }
     },
     modifiersClassNames: {
       type: Object,
-      default () {
+      default() {
         return {}
       }
     },
@@ -87,7 +84,7 @@ export default {
       }
     }
   },
-  data () {
+  data() {
     return {
       receivedDate: this.date,
       receivedIsFocus: this.isFocus,
@@ -95,23 +92,23 @@ export default {
     }
   },
   watch: {
-    date (newValue) {
+    date(newValue) {
       this.receivedDate = newValue
     },
-    isFocus (newValue) {
+    isFocus(newValue) {
       this.receivedIsFocus = newValue
     }
   },
-  mounted () {
+  mounted() {
     document.addEventListener('mousedown', this.handleOutsideClick)
     document.addEventListener('focusin', this.handleFocusIn)
   },
-  beforeDestroy () {
+  beforeDestroy() {
     document.removeEventListener('mousedown', this.handleOutsideClick)
     document.removeEventListener('focusin', this.handleFocusIn)
   },
   methods: {
-    handleClickDate (date, type) {
+    handleClickDate(date, type) {
       const dateString = format(date, this.format, { locale: this.locale })
       if (type === GRID_DAY) {
         this.receivedIsFocus = false
@@ -121,10 +118,10 @@ export default {
         this.$emit('update:date', dateString)
       }
     },
-    changeLastValidDate (dateString) {
+    changeLastValidDate(dateString) {
       this.$data.$lastValidDate = dateString
     },
-    handleOutsideClick (e) {
+    handleOutsideClick(e) {
       if (!this.receivedIsFocus) return
       this.$emit('update:date', this.$data.$lastValidDate)
       const containerRef = this.$refs.containerRef
@@ -132,7 +129,7 @@ export default {
         this.receivedIsFocus = false
       }
     },
-    handleFocusIn (e) {
+    handleFocusIn(e) {
       if (this.receivedIsFocus) return
       const containerRef = this.$refs.containerRef
       if (containerRef.contains(e.target)) {

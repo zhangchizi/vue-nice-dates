@@ -1,13 +1,9 @@
-import {
-  mount
-} from '@vue/test-utils'
-import {
-  enGB
-} from 'date-fns/locale'
+import { mount } from '@vue/test-utils'
+import { enGB } from 'date-fns/locale'
 import { format } from 'date-fns'
 import CalendarYear from '../src/CalendarYear'
 
-function factory (props) {
+function factory(props) {
   return mount(CalendarYear, {
     propsData: {
       locale: enGB,

@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="nice-dates-year"
-    :class="yearClassNames"
-  >
+  <div class="nice-dates-year" :class="yearClassNames">
     <span class="nice-dates-year_item">{{ yearText }}</span>
   </div>
 </template>
@@ -33,31 +30,33 @@ export default {
     },
     modifiers: {
       type: Object,
-      default () {
+      default() {
         return {}
       }
     },
     modifiersClassNames: {
       type: Object,
-      default () {
+      default() {
         return {}
       }
     }
   },
   computed: {
-    yearText () {
+    yearText() {
       return format(this.date, 'yyyy', { locale: this.locale })
     },
-    computedModifiersClassNames () {
+    computedModifiersClassNames() {
       return { ...defaultModifiersClassNames, ...this.modifiersClassNames }
     },
-    computedModifiers () {
+    computedModifiers() {
       return { today: isSameYear(this.date, new Date()), ...this.modifiers }
     },
-    yearClassNames () {
+    yearClassNames() {
       const result = {}
-      Object.keys(this.computedModifiers).forEach(name => {
-        result[this.computedModifiersClassNames[name]] = this.computedModifiers[name]
+      Object.keys(this.computedModifiers).forEach((name) => {
+        result[this.computedModifiersClassNames[name]] = this.computedModifiers[
+          name
+        ]
       })
       return result
     }

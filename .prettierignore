@@ -1,0 +1,12 @@
+!examples/
+!src/
+!test/
+!website/
+
+
+test/coverage/
+website/src/*.js
+website/app.vue
+website/src/*.map
+
+.travis.yml

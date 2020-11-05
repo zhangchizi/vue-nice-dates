@@ -46,13 +46,13 @@ export default {
     },
     modifiers: {
       type: Object,
-      default () {
+      default() {
         return {}
       }
     },
     modifiersClassNames: {
       type: Object,
-      default () {
+      default() {
         return {}
       }
     },
@@ -71,13 +71,13 @@ export default {
       }
     }
   },
-  data () {
+  data() {
     return {
       receivedDate: null
     }
   },
   watch: {
-    date (newValue) {
+    date(newValue) {
       if (newValue === '') {
         this.receivedDate = newValue
         this.changeLastValidDate(newValue)
@@ -86,17 +86,18 @@ export default {
       const parsedDate = parse(newValue, this.format, new Date())
       const isValid = this.isValidAndSelectable(parsedDate)
       if (isValid) {
-        if (this.receivedDate && isSameDay(parsedDate, this.receivedDate)) return
+        if (this.receivedDate && isSameDay(parsedDate, this.receivedDate))
+          return
         this.receivedDate = parsedDate
         this.changeLastValidDate(parsedDate)
       }
     }
   },
-  created () {
+  created() {
     this.initDate()
   },
   methods: {
-    initDate () {
+    initDate() {
       if (!this.date) {
         return
       }
@@ -109,11 +110,16 @@ export default {
         this.$emit('update:date', '')
       }
     },
-    isValidAndSelectable (date) {
-      const options = { minimumDate: this.minimumDate, maximumDate: this.maximumDate }
-      return isValid(date) && isSelectable(date, options) && this.validator(date)
+    isValidAndSelectable(date) {
+      const options = {
+        minimumDate: this.minimumDate,
+        maximumDate: this.maximumDate
+      }
+      return (
+        isValid(date) && isSelectable(date, options) && this.validator(date)
+      )
     },
-    handleClickDate (date, type) {
+    handleClickDate(date, type) {
       this.$emit('clickDate', date, type)
       const dateString = format(date, this.format, { locale: this.locale })
       // for Using this component independently
@@ -121,7 +127,7 @@ export default {
         this.$emit('update:date', dateString)
       }
     },
-    changeLastValidDate (date) {
+    changeLastValidDate(date) {
       if (date instanceof Date) {
         date = format(date, this.format, { locale: this.locale })
       }

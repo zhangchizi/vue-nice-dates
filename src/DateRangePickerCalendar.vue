@@ -48,7 +48,7 @@ export default {
     focusName: {
       type: String,
       default: START_DATE,
-      validator (value) {
+      validator(value) {
         return [START_DATE, END_DATE].indexOf(value) > -1
       }
     },
@@ -66,13 +66,13 @@ export default {
     },
     modifiers: {
       type: Object,
-      default () {
+      default() {
         return {}
       }
     },
     modifiersClassNames: {
       type: Object,
-      default () {
+      default() {
         return {}
       }
     },
@@ -81,7 +81,7 @@ export default {
       default: () => true
     }
   },
-  data () {
+  data() {
     return {
       receivedStartDate: null,
       receivedEndDate: null,
@@ -89,25 +89,25 @@ export default {
     }
   },
   computed: {
-    displayedStartDate () {
+    displayedStartDate() {
       return this.focusName === START_DATE &&
-      !this.receivedStartDate &&
-      this.receivedEndDate &&
-      this.hoveredDate &&
-      !isSameDay(this.hoveredDate, this.receivedEndDate)
+        !this.receivedStartDate &&
+        this.receivedEndDate &&
+        this.hoveredDate &&
+        !isSameDay(this.hoveredDate, this.receivedEndDate)
         ? this.hoveredDate
         : this.receivedStartDate
     },
-    displayedEndDate () {
+    displayedEndDate() {
       return this.focusName === END_DATE &&
-      !this.receivedEndDate &&
-      this.receivedStartDate &&
-      this.hoveredDate &&
-      !isSameDay(this.hoveredDate, this.receivedStartDate)
+        !this.receivedEndDate &&
+        this.receivedStartDate &&
+        this.hoveredDate &&
+        !isSameDay(this.hoveredDate, this.receivedStartDate)
         ? this.hoveredDate
         : this.receivedEndDate
     },
-    receivedDate () {
+    receivedDate() {
       if (this.receivedStartDate && !this.receivedEndDate) {
         return this.receivedStartDate
       } else if (!this.receivedStartDate && this.receivedEndDate) {
@@ -118,19 +118,22 @@ export default {
       }
       return this.receivedEndDate
     },
-    mergedModifiers () {
-      const options = { minimumDate: this.minimumDate, maximumDate: this.maximumDate }
-      const isSelected = date =>
+    mergedModifiers() {
+      const options = {
+        minimumDate: this.minimumDate,
+        maximumDate: this.maximumDate
+      }
+      const isSelected = (date) =>
         isSelectable(date, options) &&
-              (
-                this.isStartDate(date) ||
-                this.isMiddleDate(date) ||
-                this.isEndDate(date) ||
-                (!!this.receivedStartDate && isSameDay(date, this.receivedStartDate)) ||
-                (!!this.receivedEndDate && isSameDay(date, this.receivedEndDate))
-              )
-      const isDisabled = date => (this.focusName === START_DATE && this.isEndDate(date)) ||
-              (this.focusName === END_DATE && this.isStartDate(date))
+        (this.isStartDate(date) ||
+          this.isMiddleDate(date) ||
+          this.isEndDate(date) ||
+          (!!this.receivedStartDate &&
+            isSameDay(date, this.receivedStartDate)) ||
+          (!!this.receivedEndDate && isSameDay(date, this.receivedEndDate)))
+      const isDisabled = (date) =>
+        (this.focusName === START_DATE && this.isEndDate(date)) ||
+        (this.focusName === END_DATE && this.isStartDate(date))
       return mergeModifiers(
         {
           selected: isSelected,
@@ -144,7 +147,7 @@ export default {
     }
   },
   watch: {
-    startDate (newValue) {
+    startDate(newValue) {
       if (newValue === '') {
         this.receivedStartDate = newValue
         this.$emit('update:startDate', newValue)
@@ -154,7 +157,11 @@ export default {
       const parsedDate = parse(newValue, this.format, new Date())
       const isValid = this.isValidAndSelectable(parsedDate)
       if (isValid) {
-        if (this.receivedStartDate && isSameDay(parsedDate, this.receivedStartDate)) return
+        if (
+          this.receivedStartDate &&
+          isSameDay(parsedDate, this.receivedStartDate)
+        )
+          return
         if (this.receivedEndDate && isAfter(parsedDate, this.receivedEndDate)) {
           this.$emit('update:endDate', '')
           this.changeLastValidDate('EndDate', '')
@@ -163,7 +170,7 @@ export default {
         this.changeLastValidDate('StartDate', parsedDate)
       }
     },
-    endDate (newValue) {
+    endDate(newValue) {
       if (newValue === '') {
         this.receivedEndDate = newValue
         this.$emit('update:endDate', newValue)
@@ -173,8 +180,12 @@ export default {
       const parsedDate = parse(newValue, this.format, new Date())
       const isValid = this.isValidAndSelectable(parsedDate)
       if (isValid) {
-        if (this.receivedEndDate && isSameDay(parsedDate, this.receivedEndDate)) return
-        if (this.receivedStartDate && isBefore(parsedDate, this.receivedStartDate)) {
+        if (this.receivedEndDate && isSameDay(parsedDate, this.receivedEndDate))
+          return
+        if (
+          this.receivedStartDate &&
+          isBefore(parsedDate, this.receivedStartDate)
+        ) {
           this.$emit('update:startDate', '')
           this.changeLastValidDate('StartDate', '')
         }
@@ -183,13 +194,13 @@ export default {
       }
     }
   },
-  created () {
+  created() {
     this.initStartDate()
     this.initEndDate()
     this.processInitalDate()
   },
   methods: {
-    initStartDate () {
+    initStartDate() {
       if (this.startDate) {
         const parsedDate = parse(this.startDate, this.format, new Date())
         const isValid = this.isValidAndSelectable(parsedDate)
@@ -201,7 +212,7 @@ export default {
         }
       }
     },
-    initEndDate () {
+    initEndDate() {
       if (this.endDate) {
         const parsedDate = parse(this.endDate, this.format, new Date())
         const isValid = this.isValidAndSelectable(parsedDate)
@@ -213,14 +224,14 @@ export default {
         }
       }
     },
-    processInitalDate () {
+    processInitalDate() {
       if (this.receivedEndDate && this.receivedStartDate) {
         if (!isAfter(this.receivedEndDate, this.receivedStartDate)) {
           this.$emit('update:endDate', '')
         }
       }
     },
-    handleClickDate (date, type) {
+    handleClickDate(date, type) {
       this.$emit('clickDate', date, type)
 
       if (type !== GRID_DAY && !this.date) return
@@ -233,8 +244,8 @@ export default {
         const dateString = format(date, this.format, { locale: this.locale })
         this.$emit('update:startDate', dateString)
       } else if (this.focusName === END_DATE) {
-        const invalidStartDate = this.receivedStartDate &&
-                                 !isBefore(this.receivedStartDate, date)
+        const invalidStartDate =
+          this.receivedStartDate && !isBefore(this.receivedStartDate, date)
         if (invalidStartDate) {
           this.$emit('update:startDate', '')
         }
@@ -243,34 +254,48 @@ export default {
         this.$emit('update:endDate', dateString)
       }
     },
-    handleMouseEnterDate (date) {
+    handleMouseEnterDate(date) {
       this.hoveredDate = date
     },
-    handleMouseLeaveDates () {
+    handleMouseLeaveDates() {
       this.hoveredDate = null
     },
-    changeLastValidDate (name, date) {
+    changeLastValidDate(name, date) {
       if (date instanceof Date) {
         date = format(date, this.format, { locale: this.locale })
       }
       this.$emit(`changeLastValid${name}`, date)
     },
-    isStartDate (date) {
+    isStartDate(date) {
       if (!this.displayedStartDate || !this.displayedEndDate) return false
-      return isSameDay(date, this.displayedStartDate) && isBefore(date, this.displayedEndDate)
+      return (
+        isSameDay(date, this.displayedStartDate) &&
+        isBefore(date, this.displayedEndDate)
+      )
     },
-    isMiddleDate (date) {
+    isMiddleDate(date) {
       if (!this.displayedStartDate || !this.displayedEndDate) return false
-      return isAfter(date, this.displayedStartDate) && isBefore(date, this.displayedEndDate)
+      return (
+        isAfter(date, this.displayedStartDate) &&
+        isBefore(date, this.displayedEndDate)
+      )
     },
-    isEndDate (date) {
+    isEndDate(date) {
       if (!this.displayedStartDate || !this.displayedEndDate) return false
-      return isSameDay(date, this.displayedEndDate) && isAfter(date, this.displayedStartDate)
+      return (
+        isSameDay(date, this.displayedEndDate) &&
+        isAfter(date, this.displayedStartDate)
+      )
     },
 
-    isValidAndSelectable (date) {
-      const options = { minimumDate: this.minimumDate, maximumDate: this.maximumDate }
-      return isValid(date) && isSelectable(date, options) && this.validator(date)
+    isValidAndSelectable(date) {
+      const options = {
+        minimumDate: this.minimumDate,
+        maximumDate: this.maximumDate
+      }
+      return (
+        isValid(date) && isSelectable(date, options) && this.validator(date)
+      )
     }
   }
 }

@@ -1,7 +1,5 @@
 import { mount } from '@vue/test-utils'
-import {
-  enGB
-} from 'date-fns/locale'
+import { enGB } from 'date-fns/locale'
 import flushPromises from 'flush-promises'
 import CalendarNavigation from '../src/CalendarNavigation'
 import { GRID_DAY, GRID_MONTH, GRID_YEAR } from '../src/constants'
@@ -19,7 +17,9 @@ describe('CalendarNavigation.vue', () => {
   })
 
   it('should not disable the previous button without passing the minimumDate', () => {
-    expect(wrapper.find('.nice-dates-navigation_previous').classes()).not.toContain('-disabled')
+    expect(
+      wrapper.find('.nice-dates-navigation_previous').classes()
+    ).not.toContain('-disabled')
   })
 
   it('should disable the previous button if the month is equal to the month of minimumDate', async () => {
@@ -27,11 +27,15 @@ describe('CalendarNavigation.vue', () => {
       minimumDate: new Date()
     })
     await flushPromises()
-    expect(wrapper.find('.nice-dates-navigation_previous').classes()).toContain('-disabled')
+    expect(wrapper.find('.nice-dates-navigation_previous').classes()).toContain(
+      '-disabled'
+    )
   })
 
   it('should not disable the next button without passing the maximumDate', () => {
-    expect(wrapper.find('.nice-dates-navigation_next').classes()).not.toContain('-disabled')
+    expect(wrapper.find('.nice-dates-navigation_next').classes()).not.toContain(
+      '-disabled'
+    )
   })
 
   it('should disable the next button if the month is equal to the month of maximumDate', async () => {
@@ -39,7 +43,9 @@ describe('CalendarNavigation.vue', () => {
       maximumDate: new Date()
     })
     await flushPromises()
-    expect(wrapper.find('.nice-dates-navigation_next').classes()).toContain('-disabled')
+    expect(wrapper.find('.nice-dates-navigation_next').classes()).toContain(
+      '-disabled'
+    )
   })
 
   it('should display month and year if the gridType is "day"', async () => {
@@ -49,7 +55,9 @@ describe('CalendarNavigation.vue', () => {
       gridType: GRID_DAY
     })
     await flushPromises()
-    expect(wrapper.find('.nice-dates-navigation_current').text()).toBe('March 2020')
+    expect(wrapper.find('.nice-dates-navigation_current').text()).toBe(
+      'March 2020'
+    )
   })
 
   it('should display year if the gridType is "month"', async () => {
@@ -69,7 +77,9 @@ describe('CalendarNavigation.vue', () => {
       gridType: GRID_YEAR
     })
     await flushPromises()
-    expect(wrapper.find('.nice-dates-navigation_current').text()).toBe('2020 - 2039')
+    expect(wrapper.find('.nice-dates-navigation_current').text()).toBe(
+      '2020 - 2039'
+    )
   })
 
   it('should emit an event when click the previous button', async () => {

@@ -10,10 +10,7 @@
       @clickTitle="handleClickTitle"
     />
 
-    <CalendarWeekHeader
-      :locale="locale"
-      :grid-type="gridType"
-    />
+    <CalendarWeekHeader :locale="locale" :grid-type="gridType" />
 
     <CalendarGrid
       :locale="locale"
@@ -52,7 +49,7 @@ export default {
     date: {
       type: [Date, String],
       default: '',
-      validator (value) {
+      validator(value) {
         return value instanceof Date || value === ''
       }
     },
@@ -66,13 +63,13 @@ export default {
     },
     modifiers: {
       type: Object,
-      default () {
+      default() {
         return {}
       }
     },
     modifiersClassNames: {
       type: Object,
-      default () {
+      default() {
         return {}
       }
     },
@@ -85,27 +82,30 @@ export default {
       default: null
     }
   },
-  data () {
+  data() {
     return {
-      receivedInitialDate: this.date || this.initialDate || this.minimumDate || new Date(),
+      receivedInitialDate:
+        this.date || this.initialDate || this.minimumDate || new Date(),
       gridType: GRID_DAY
     }
   },
   computed: {
-    mergedModifiers () {
-      const options = { minimumDate: this.minimumDate, maximumDate: this.maximumDate }
+    mergedModifiers() {
+      const options = {
+        minimumDate: this.minimumDate,
+        maximumDate: this.maximumDate
+      }
       return mergeModifiers(
-        { disabled: date => !isSelectable(date, options) },
+        { disabled: (date) => !isSelectable(date, options) },
         this.modifiers
       )
     }
   },
   watch: {
-    date (newValue, oldValue) {
+    date(newValue, oldValue) {
       if (!newValue) {
-        this.receivedInitialDate = this.initialDate ||
-                                     this.minimumDate ||
-                                     new Date()
+        this.receivedInitialDate =
+          this.initialDate || this.minimumDate || new Date()
         return
       }
       if (oldValue && isSameDay(newValue, oldValue)) return
@@ -113,17 +113,17 @@ export default {
     }
   },
   methods: {
-    handleClickTitle () {
+    handleClickTitle() {
       if (!this.enableGridSwitch) {
         this.gridType = GRID_DAY
         return
       }
       this.gridType = this.getGridType(this.gridType, true)
     },
-    handleNavigate (date) {
+    handleNavigate(date) {
       this.receivedInitialDate = date
     },
-    handleClickDate (date, type) {
+    handleClickDate(date, type) {
       this.gridType = this.getGridType(type)
       let resolvedDate = date
       if (this.date instanceof Date) {
@@ -136,13 +136,13 @@ export default {
       this.receivedInitialDate = resolvedDate
       this.$emit('clickDate', resolvedDate, type)
     },
-    handleMouseEnterDate (date) {
+    handleMouseEnterDate(date) {
       this.$emit('mouseEnterDate', date)
     },
-    handleMouseLeaveDates () {
+    handleMouseLeaveDates() {
       this.$emit('mouseLeaveDates')
     },
-    getGridType (type, isReverse) {
+    getGridType(type, isReverse) {
       switch (type) {
         case GRID_YEAR:
           return isReverse ? GRID_YEAR : GRID_MONTH

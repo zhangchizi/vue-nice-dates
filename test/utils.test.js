@@ -1,7 +1,11 @@
 import { mount } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import { subDays, addDays } from 'date-fns'
-import { isSelectable, mergeModifiers, triggerBlurForTouchDevice } from '../src/utils'
+import {
+  isSelectable,
+  mergeModifiers,
+  triggerBlurForTouchDevice
+} from '../src/utils'
 
 describe('utils.js', () => {
   describe('isSelectable should work', () => {
@@ -64,8 +68,7 @@ describe('utils.js', () => {
 
     it('should merge baseModifiers with newModifiers', () => {
       const mockFnA1 = jest.fn()
-      mockFnA1.mockReturnValueOnce(true)
-        .mockReturnValue(false)
+      mockFnA1.mockReturnValueOnce(true).mockReturnValue(false)
       const mockFnA2 = jest.fn()
       const mockFnB = jest.fn()
       const baseModifiers = {
@@ -91,7 +94,7 @@ describe('utils.js', () => {
   it('triggerBlurForTouchDevice() should work', async () => {
     const component = {
       template: '<input ref="input" type="text">',
-      mounted () {
+      mounted() {
         this.$refs.input.focus()
       }
     }

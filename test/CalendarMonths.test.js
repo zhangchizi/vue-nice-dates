@@ -21,7 +21,9 @@ describe('CalendarMonths.vue', () => {
   it('should render month accroding to the initialDate prop', async () => {
     await flushPromises()
     expect(wrapper.vm.months.length).toBe(20)
-    expect(wrapper.find('.nice-dates-grid_container').element.children.length).toBe(20)
+    expect(
+      wrapper.find('.nice-dates-grid_container').element.children.length
+    ).toBe(20)
     expect(wrapper.vm.startDate).toEqual(new Date(2019, 8, 1))
     expect(wrapper.vm.endDate).toEqual(new Date(2021, 3, 1))
   })

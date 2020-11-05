@@ -17,23 +17,23 @@ export default {
   components: {
     Calendar
   },
-  data () {
+  data() {
     return {
       dates: [],
       locale: enGB
     }
   },
   computed: {
-    modifiers () {
+    modifiers() {
       return {
         selected: (date) => {
-          return this.dates.some(item => isSameDay(item, date))
+          return this.dates.some((item) => isSameDay(item, date))
         }
       }
     }
   },
   methods: {
-    handleClickDate (date) {
+    handleClickDate(date) {
       this.dates.push(date)
     }
   }

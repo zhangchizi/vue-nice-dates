@@ -1,8 +1,5 @@
 <template>
-  <div
-    ref="containerRef"
-    class="nice-dates"
-  >
+  <div ref="containerRef" class="nice-dates">
     <slot></slot>
     <Popover :is-open="receivedIsFocus">
       <DateRangePickerCalendar
@@ -34,8 +31,8 @@ import Popover from './Popover'
 
 const KEY_FOR_FOCUS = 'niceDates'
 
-function camelcaseToDash (str) {
-  return str.replace(/[A-Z]/g, m => `-${m.toLowerCase()}`)
+function camelcaseToDash(str) {
+  return str.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`)
 }
 
 export default {
@@ -72,7 +69,7 @@ export default {
     focusName: {
       type: String,
       default: START_DATE,
-      validator (value) {
+      validator(value) {
         return [START_DATE, END_DATE, ''].indexOf(value) > -1
       }
     },
@@ -90,13 +87,13 @@ export default {
     },
     modifiers: {
       type: Object,
-      default () {
+      default() {
         return {}
       }
     },
     modifiersClassNames: {
       type: Object,
-      default () {
+      default() {
         return {}
       }
     },
@@ -105,7 +102,7 @@ export default {
       default: () => true
     }
   },
-  data () {
+  data() {
     return {
       receivedStartDate: this.startDate,
       receivedEndDate: this.endDate,
@@ -118,20 +115,20 @@ export default {
     }
   },
   watch: {
-    startDate (newValue) {
+    startDate(newValue) {
       this.receivedStartDate = newValue
     },
-    endDate (newValue) {
+    endDate(newValue) {
       this.receivedEndDate = newValue
     },
-    isFocus (newValue) {
+    isFocus(newValue) {
       this.receivedIsFocus = newValue
     },
-    receivedFocusName (newValue) {
+    receivedFocusName(newValue) {
       this.$emit('update:focusName', newValue)
     }
   },
-  created () {
+  created() {
     if (this.receivedStartDate) {
       this.$data.$hasTouchedStartDate = true
     }
@@ -139,16 +136,16 @@ export default {
       this.$data.$hasTouchedEndDate = true
     }
   },
-  mounted () {
+  mounted() {
     document.addEventListener('mousedown', this.handleOutsideClick)
     document.addEventListener('focusin', this.handleFocusIn)
   },
-  beforeDestroy () {
+  beforeDestroy() {
     document.removeEventListener('mousedown', this.handleOutsideClick)
     document.removeEventListener('focusin', this.handleFocusIn)
   },
   methods: {
-    handleClickDate (date, type) {
+    handleClickDate(date, type) {
       if (type !== GRID_DAY && !this.date) return
 
       // Triggered after 'receivedStartDate' and 'receivedEndDate' updated.
@@ -166,20 +163,19 @@ export default {
             this.receivedFocusName = START_DATE
           }
         }
-        if (this.$data.$hasTouchedStartDate &&
-            this.$data.$hasTouchedEndDate) {
+        if (this.$data.$hasTouchedStartDate && this.$data.$hasTouchedEndDate) {
           this.receivedIsFocus = false
           triggerBlurForTouchDevice()
         }
       })
     },
-    changeLastValidStartDate (dateString) {
+    changeLastValidStartDate(dateString) {
       this.$data.$lastValidStartDate = dateString
     },
-    changeLastValidEndDate (dateString) {
+    changeLastValidEndDate(dateString) {
       this.$data.$lastValidEndDate = dateString
     },
-    updateReceivedStartDate (dataString) {
+    updateReceivedStartDate(dataString) {
       if (!dataString) {
         // update 'receivedStartDate' before 'handleClickDate()'
         this.receivedStartDate = dataString
@@ -187,7 +183,7 @@ export default {
       }
       this.$emit('update:startDate', dataString)
     },
-    updateReceivedEndDate (dataString) {
+    updateReceivedEndDate(dataString) {
       if (!dataString) {
         // update 'receivedStartDate' before 'handleClickDate()'
         this.receivedEndDate = dataString
@@ -195,7 +191,7 @@ export default {
       }
       this.$emit('update:endDate', dataString)
     },
-    handleOutsideClick (e) {
+    handleOutsideClick(e) {
       if (!this.receivedIsFocus) return
       this.$emit('update:startDate', this.$data.$lastValidStartDate)
       this.$emit('update:endDate', this.$data.$lastValidEndDate)
@@ -204,17 +200,18 @@ export default {
         this.receivedIsFocus = false
       }
     },
-    handleFocusIn (e) {
+    handleFocusIn(e) {
       const containerRef = this.$refs.containerRef
       if (containerRef.contains(e.target)) {
         this.receivedIsFocus = true
         this.receivedFocusName = e.target.dataset[KEY_FOR_FOCUS]
       }
     },
-    triggerFocusEvent (receivedFocusName) {
+    triggerFocusEvent(receivedFocusName) {
       const containerRef = this.$refs.containerRef
-      const inputElement = containerRef
-        .querySelector(`[data-${camelcaseToDash(KEY_FOR_FOCUS)}="${receivedFocusName}"]`)
+      const inputElement = containerRef.querySelector(
+        `[data-${camelcaseToDash(KEY_FOR_FOCUS)}="${receivedFocusName}"]`
+      )
       inputElement && inputElement.focus()
     }
   }

@@ -111,8 +111,12 @@ describe('DateRangePicker.vue', () => {
       await flushPromises()
       document.dispatchEvent(new Event('mousedown'))
       expect(wrapper.vm.receivedIsFocus).toBe(false)
-      expect(wrapper.emitted()['update:startDate'][0]).toEqual([wrapper.vm.$data.$lastValidStartDate])
-      expect(wrapper.emitted()['update:endDate'][0]).toEqual([wrapper.vm.$data.$lastValidEndDate])
+      expect(wrapper.emitted()['update:startDate'][0]).toEqual([
+        wrapper.vm.$data.$lastValidStartDate
+      ])
+      expect(wrapper.emitted()['update:endDate'][0]).toEqual([
+        wrapper.vm.$data.$lastValidEndDate
+      ])
       wrapper.destroy()
     })
 

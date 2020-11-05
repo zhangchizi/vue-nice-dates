@@ -6,7 +6,7 @@
       :readonly="isReadOnly"
       placeholder="dd/mm/yyyy"
       @focusout="handleFocusOut"
-    >
+    />
     <DatePickerCalendar
       :date.sync="date"
       :locale="locale"
@@ -23,7 +23,7 @@ export default {
   components: {
     DatePickerCalendar
   },
-  data () {
+  data() {
     return {
       date: '',
       lastValidDate: '',
@@ -32,13 +32,12 @@ export default {
     }
   },
   methods: {
-    changeLastValidDate (date) {
+    changeLastValidDate(date) {
       this.lastValidDate = date
     },
-    handleFocusOut () {
+    handleFocusOut() {
       this.date = this.lastValidDate
     }
   }
 }
-
 </script>

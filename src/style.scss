@@ -72,7 +72,7 @@ $nice-dates-cell-width: calc(100% / 7);
   }
 
   &-week-header {
-    box-shadow: 0 1px 0 rgba(#000, .06);
+    box-shadow: 0 1px 0 rgba(#000, 0.06);
     display: flex;
     padding: 8px 0;
 
@@ -83,11 +83,11 @@ $nice-dates-cell-width: calc(100% / 7);
       text-align: center;
       text-transform: capitalize;
       width: $nice-dates-cell-width;
-      transition: opacity .2s;
+      transition: opacity 0.2s;
       user-select: none;
 
       &.-outside {
-        opacity: .5;
+        opacity: 0.5;
       }
     }
   }
@@ -188,7 +188,7 @@ $nice-dates-cell-width: calc(100% / 7);
 
     &:after {
       border: 2px solid $nice-dates-color-accent;
-      transform: scale(.95);
+      transform: scale(0.95);
       transition-duration: 150ms;
       transition-property: transform, opacity;
       z-index: 2;
@@ -281,7 +281,6 @@ $nice-dates-cell-width: calc(100% / 7);
 
   &-day {
     &.-wide {
-
       &:before,
       &:after {
         // 12.5% = (1-0.75)/2
@@ -306,7 +305,6 @@ $nice-dates-cell-width: calc(100% / 7);
     }
 
     &.-wide {
-
       // 24.28% = (6/5*0.75)/(7/4)/2
       // 0.75: breakpoint in the file--CalendarGrid.vue
       &:before,
@@ -333,7 +331,7 @@ $nice-dates-cell-width: calc(100% / 7);
   &-popover {
     background-color: $nice-dates-color-white;
     border-radius: 8px;
-    box-shadow: 0 1px 8px rgba(#000, .12);
+    box-shadow: 0 1px 8px rgba(#000, 0.12);
     margin: 8px 0;
     max-width: 600px;
     position: absolute;
@@ -341,7 +339,7 @@ $nice-dates-cell-width: calc(100% / 7);
     transform: perspective(1000px);
     transition-property: transform, opacity;
     transition-duration: 400ms;
-    transition-timing-function: cubic-bezier(.4, .2, 0, 1.1);
+    transition-timing-function: cubic-bezier(0.4, 0.2, 0, 1.1);
     width: 100%;
     opacity: 1;
     z-index: 9;
@@ -354,8 +352,7 @@ $nice-dates-cell-width: calc(100% / 7);
   }
 }
 
-
-// transition for switching grid 
+// transition for switching grid
 .niceDatesOut-enter-active,
 .niceDatesOut-leave-active,
 .niceDatesIn-enter-active,
@@ -369,7 +366,7 @@ $nice-dates-cell-width: calc(100% / 7);
 
 .niceDatesIn-leave-to {
   opacity: 0;
-  transform: scale(.8);
+  transform: scale(0.8);
 }
 
 .niceDatesIn-enter {
@@ -390,7 +387,7 @@ $nice-dates-cell-width: calc(100% / 7);
 
 .niceDatesOut-enter {
   opacity: 0;
-  transform: scale(.8);
+  transform: scale(0.8);
 }
 
 .niceDatesOut-leave-to {

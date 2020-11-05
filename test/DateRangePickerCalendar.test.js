@@ -194,8 +194,7 @@ describe('DateRangePickerCalendar.vue', () => {
 
     it('can use custom validator to validate the startDate and the endDate props', async () => {
       const mockFn = jest.fn()
-      mockFn.mockReturnValueOnce(false)
-        .mockReturnValue(true)
+      mockFn.mockReturnValueOnce(false).mockReturnValue(true)
       wrapper.setProps({
         validator: mockFn,
         startDate: '02/02/2020',

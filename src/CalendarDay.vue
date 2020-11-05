@@ -1,12 +1,8 @@
 <template>
-  <div
-    class="nice-dates-day"
-    :class="dayClassNames"
-  >
-    <span
-      v-if="dayOfMonth === 1"
-      class="nice-dates-day_month"
-    >{{ monthString }}</span>
+  <div class="nice-dates-day" :class="dayClassNames">
+    <span v-if="dayOfMonth === 1" class="nice-dates-day_month">{{
+      monthString
+    }}</span>
     <span class="nice-dates-day_item">{{ dayOfMonth }}</span>
   </div>
 </template>
@@ -33,13 +29,13 @@ export default {
     },
     modifiers: {
       type: Object,
-      default () {
+      default() {
         return {}
       }
     },
     modifiersClassNames: {
       type: Object,
-      default () {
+      default() {
         return {}
       }
     },
@@ -48,26 +44,28 @@ export default {
       type: Object
     }
   },
-  data () {
+  data() {
     return {
       dayOfMonth: getDate(this.date)
     }
   },
   computed: {
-    computedModifiersClassNames () {
+    computedModifiersClassNames() {
       return { ...defaultModifiersClassNames, ...this.modifiersClassNames }
     },
-    computedModifiers () {
+    computedModifiers() {
       return { today: isToday(this.date), ...this.modifiers }
     },
-    dayClassNames () {
+    dayClassNames() {
       const result = {}
-      Object.keys(this.computedModifiers).forEach(name => {
-        result[this.computedModifiersClassNames[name]] = this.computedModifiers[name]
+      Object.keys(this.computedModifiers).forEach((name) => {
+        result[this.computedModifiersClassNames[name]] = this.computedModifiers[
+          name
+        ]
       })
       return result
     },
-    monthString () {
+    monthString() {
       return format(this.date, 'MMMM', { locale: this.locale }).substring(0, 3)
     }
   }

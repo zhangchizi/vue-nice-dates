@@ -24,10 +24,24 @@
 </template>
 
 <script>
-import { startOfYear, eachYearOfInterval, addYears, getYear, isSameYear, isAfter, subYears, lightFormat } from 'date-fns'
+import {
+  startOfYear,
+  eachYearOfInterval,
+  addYears,
+  getYear,
+  isSameYear,
+  isAfter,
+  subYears,
+  lightFormat
+} from 'date-fns'
 import CalendarYear from './CalendarYear'
 import { invokeModifiers } from './utils'
-import { ORIGIN_BOTTOM, ORIGIN_TOP, TRANSITION_DURATION, GRID_YEAR } from './constants'
+import {
+  ORIGIN_BOTTOM,
+  ORIGIN_TOP,
+  TRANSITION_DURATION,
+  GRID_YEAR
+} from './constants'
 
 const GRID_ROWS = 5
 const GRID_COLS = 4
@@ -49,7 +63,7 @@ export default {
     date: {
       type: [Date, String],
       default: '',
-      validator (value) {
+      validator(value) {
         return value instanceof Date || value === ''
       }
     },
@@ -63,18 +77,18 @@ export default {
     },
     modifiers: {
       type: Object,
-      default () {
+      default() {
         return {}
       }
     },
     modifiersClassNames: {
       type: Object,
-      default () {
+      default() {
         return {}
       }
     }
   },
-  data () {
+  data() {
     return {
       startDate: null,
       endDate: null,
@@ -87,7 +101,7 @@ export default {
     }
   },
   computed: {
-    classObject () {
+    classObject() {
       return {
         '-moving': !!this.offset,
         '-origin-bottom': this.origin === ORIGIN_BOTTOM,
@@ -95,51 +109,51 @@ export default {
         '-transition': !!this.transition
       }
     },
-    styleObject () {
+    styleObject() {
       return {
         transform: `translate3d(0, ${this.offset}px, 0)`,
         transitionDuration: `${this.transitionDuration}ms`
       }
     },
-    styleForItem () {
-      return { height: this.cellHeight * 6 / GRID_ROWS + 'px' }
+    styleForItem() {
+      return { height: (this.cellHeight * 6) / GRID_ROWS + 'px' }
     }
   },
   watch: {
-    initialDate (newValue, oldValue) {
+    initialDate(newValue, oldValue) {
       this.transitionToCurrentDate(newValue, oldValue)
     }
   },
-  created () {
+  created() {
     this.initYears()
   },
-  beforeDestroy () {
+  beforeDestroy() {
     clearTimeout(this.$data.$timeoutId)
   },
   methods: {
-    initYears () {
+    initYears() {
       this.startDate = startOfYear(this.initialDate)
       this.endDate = addYears(this.startDate, GRID_COLS * GRID_ROWS - 1)
       this.offset = 0
       this.transition = false
       this.generateYears()
     },
-    generateYears ({ startDate = this.startDate, endDate = this.endDate } = {}) {
+    generateYears({ startDate = this.startDate, endDate = this.endDate } = {}) {
       this.years = eachYearOfInterval({
         start: startDate,
         end: endDate
       })
     },
-    handleClickDate (date) {
+    handleClickDate(date) {
       this.$emit('clickDate', date, GRID_YEAR)
     },
-    handleMouseEnterYear (date) {
+    handleMouseEnterYear(date) {
       this.$emit('mouseEnterDate', date)
     },
-    handleMouseLeaveDates () {
+    handleMouseLeaveDates() {
       this.$emit('mouseLeaveDates')
     },
-    generateModifiers (year, index) {
+    generateModifiers(year, index) {
       return {
         selected: isSameYear(year, this.date || null),
         outside: index > 10,
@@ -147,7 +161,7 @@ export default {
         wide: this.isWide
       }
     },
-    transitionToCurrentDate (date, oldDate) {
+    transitionToCurrentDate(date, oldDate) {
       clearTimeout(this.$data.$timeoutId)
       const total = GRID_ROWS * GRID_COLS
       const diffYears = Math.abs(getYear(date) - getYear(oldDate))
@@ -173,7 +187,7 @@ export default {
         this.initYears(date)
       }
     },
-    lightFormat (date, format = 'yyyy-MM-dd') {
+    lightFormat(date, format = 'yyyy-MM-dd') {
       return lightFormat(date, format)
     }
   }

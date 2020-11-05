@@ -21,7 +21,9 @@ describe('CalendarDays.vue', () => {
   it('should render days accroding to the initialDate prop', async () => {
     await flushPromises()
     expect(wrapper.vm.days.length).toBe(42)
-    expect(wrapper.find('.nice-dates-grid_container').element.children.length).toBe(42)
+    expect(
+      wrapper.find('.nice-dates-grid_container').element.children.length
+    ).toBe(42)
     expect(wrapper.vm.startDate).toEqual(new Date(2020, 1, 24))
     expect(wrapper.vm.endDate).toEqual(endOfDay(new Date(2020, 3, 5)))
   })

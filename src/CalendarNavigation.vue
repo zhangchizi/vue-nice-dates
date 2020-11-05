@@ -2,29 +2,39 @@
   <div class="nice-dates-navigation">
     <a
       class="nice-dates-navigation_previous"
-      :class="{'-disabled': isMinimumDate}"
+      :class="{ '-disabled': isMinimumDate }"
       @click.prevent="handlePrevious"
       @touchend.prevent="handlePrevious"
     ></a>
 
-    <span
-      class="nice-dates-navigation_current"
-      @click="handleClickTitle"
-    >
+    <span class="nice-dates-navigation_current" @click="handleClickTitle">
       {{ monthText }}
     </span>
 
     <a
       class="nice-dates-navigation_next"
-      :class="{'-disabled': isMaximumDate}"
+      :class="{ '-disabled': isMaximumDate }"
       @click.prevent="handleNext"
       @touchend.prevent="handleNext"
     ></a>
   </div>
 </template>
 <script>
-import { addMonths, subMonths, format, isSameMonth, subYears, addYears, isSameYear } from 'date-fns'
-import { TRANSITION_DURATION, GRID_DAY, GRID_MONTH, GRID_YEAR } from './constants'
+import {
+  addMonths,
+  subMonths,
+  format,
+  isSameMonth,
+  subYears,
+  addYears,
+  isSameYear
+} from 'date-fns'
+import {
+  TRANSITION_DURATION,
+  GRID_DAY,
+  GRID_MONTH,
+  GRID_YEAR
+} from './constants'
 
 const GRID_ROWS = 5
 const GRID_COLS = 4
@@ -53,13 +63,13 @@ export default {
       default: null
     }
   },
-  data () {
+  data() {
     return {
       $lastNavigateTime: 0
     }
   },
   computed: {
-    isMinimumDate () {
+    isMinimumDate() {
       if (!this.minimumDate) return false
       if (this.gridType === GRID_DAY) {
         return isSameMonth(this.date, this.minimumDate)
@@ -69,7 +79,7 @@ export default {
         return false
       }
     },
-    isMaximumDate () {
+    isMaximumDate() {
       if (!this.maximumDate) return false
       if (this.gridType === GRID_DAY) {
         return isSameMonth(this.date, this.maximumDate)
@@ -79,7 +89,7 @@ export default {
         return false
       }
     },
-    formatType () {
+    formatType() {
       switch (this.gridType) {
         case GRID_DAY:
           return 'MMMM yyyy'
@@ -87,7 +97,7 @@ export default {
           return 'yyyy'
       }
     },
-    monthText () {
+    monthText() {
       const date = format(this.date, this.formatType, { locale: this.locale })
       if (this.gridType === GRID_YEAR) {
         return `${date} - ${+date + GRID_ROWS * GRID_COLS - 1}`
@@ -96,11 +106,12 @@ export default {
     }
   },
   methods: {
-    handleClickTitle () {
+    handleClickTitle() {
       this.$emit('clickTitle')
     },
-    handlePrevious () {
-      const flag = Date.now() - this.$data.$lastNavigateTime <= TRANSITION_DURATION
+    handlePrevious() {
+      const flag =
+        Date.now() - this.$data.$lastNavigateTime <= TRANSITION_DURATION
       if (flag) return
       let date = null
       if (this.gridType === GRID_DAY) {
@@ -113,8 +124,9 @@ export default {
       this.$emit('navigate', date)
       this.$data.$lastNavigateTime = Date.now()
     },
-    handleNext () {
-      const flag = Date.now() - this.$data.$lastNavigateTime <= TRANSITION_DURATION
+    handleNext() {
+      const flag =
+        Date.now() - this.$data.$lastNavigateTime <= TRANSITION_DURATION
       if (flag) return
       let date = null
       if (this.gridType === GRID_DAY) {
