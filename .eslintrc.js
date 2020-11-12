@@ -6,10 +6,10 @@ module.exports = {
   },
   parser: 'vue-eslint-parser',
   extends: [
-    'standard',
     'plugin:jest/recommended',
     'plugin:vue/recommended',
-    'plugin:prettier/recommended'
+    'plugin:prettier/recommended',
+    'prettier/vue'
   ],
   parserOptions: {
     ecmaVersion: 2018,
