@@ -32,7 +32,7 @@ import Popover from './Popover'
 const KEY_FOR_FOCUS = 'niceDates'
 
 function camelcaseToDash(str) {
-  return str.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`)
+  return str.replace(/[A-Z]/g, m => `-${m.toLowerCase()}`)
 }
 
 export default {

@@ -96,7 +96,7 @@ export default {
         maximumDate: this.maximumDate
       }
       return mergeModifiers(
-        { disabled: (date) => !isSelectable(date, options) },
+        { disabled: date => !isSelectable(date, options) },
         this.modifiers
       )
     }

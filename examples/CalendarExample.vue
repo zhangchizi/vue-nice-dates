@@ -26,8 +26,8 @@ export default {
   computed: {
     modifiers() {
       return {
-        selected: (date) => {
-          return this.dates.some((item) => isSameDay(item, date))
+        selected: date => {
+          return this.dates.some(item => isSameDay(item, date))
         }
       }
     }

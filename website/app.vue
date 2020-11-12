@@ -228,7 +228,7 @@
 </template>
 
 <script>
-import { component as VueCodeHighlight } from 'vue-code-highlight'
+import VueCodeHighlight from './CodeHighlight'
 import DatePickerExample from '../examples/DatePickerExample'
 import DatePickerExampleCode from './examplesCode/DatePickerExample'
 

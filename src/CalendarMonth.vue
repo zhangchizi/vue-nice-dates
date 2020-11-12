@@ -50,7 +50,7 @@ export default {
     },
     monthClassNames() {
       const result = {}
-      Object.keys(this.computedModifiers).forEach((name) => {
+      Object.keys(this.computedModifiers).forEach(name => {
         result[this.computedModifiersClassNames[name]] = this.computedModifiers[
           name
         ]

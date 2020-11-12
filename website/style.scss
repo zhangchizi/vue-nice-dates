@@ -221,14 +221,16 @@ input {
     }
   }
 
-  pre {
-    margin: 0;
-  }
-
   p {
     font-size: 16px;
     margin: 0 0 0.5em;
   }
+}
+
+code[class*='language-'],
+pre[class*='language-'] {
+  margin: 0;
+  font-size: $font-size-small;
 }
 
 .token-line {

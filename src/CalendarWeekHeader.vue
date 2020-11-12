@@ -42,7 +42,7 @@ export default {
       return eachDayOfInterval({
         start: startOfWeek(today, options),
         end: endOfWeek(today, options)
-      }).map((date) => format(date, 'eee', options))
+      }).map(date => format(date, 'eee', options))
     }
   }
 }

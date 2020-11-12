@@ -123,7 +123,7 @@ export default {
         minimumDate: this.minimumDate,
         maximumDate: this.maximumDate
       }
-      const isSelected = (date) =>
+      const isSelected = date =>
         isSelectable(date, options) &&
         (this.isStartDate(date) ||
           this.isMiddleDate(date) ||
@@ -131,7 +131,7 @@ export default {
           (!!this.receivedStartDate &&
             isSameDay(date, this.receivedStartDate)) ||
           (!!this.receivedEndDate && isSameDay(date, this.receivedEndDate)))
-      const isDisabled = (date) =>
+      const isDisabled = date =>
         (this.focusName === START_DATE && this.isEndDate(date)) ||
         (this.focusName === END_DATE && this.isStartDate(date))
       return mergeModifiers(
